@@ -1,0 +1,90 @@
+---
+title: "`r dat$title`"
+author: 
+- affiliation: "`r dat$affiliation`"
+  email: "`r dat$username`"
+  name: "`r dat$requester_name`"
+addr: 
+  l1: "`r dat$x24_7_contact_phone_number`"
+output: 
+  word_document: 
+      reference_docx: styles_reference.docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### **Requester:** `r dat$requester_name` (`r dat$username`; `r dat$x24_7_contact_phone_number `)
+
+### **Affiliation:** `r dat$affiliation`
+
+## General Information
+
+**`r maxyr` GF `r dat$survey `**
+
+   - *Is this a new or a repeat collection?:* `r dat$new_or_repeat_collection `
+   - *Collection type:* `r dat$collection_type `       
+   - *Project Funding Source:* `r dat$funding `
+   - *Is this project funding extra sea days?* `r dat$extra_sea_days `
+   - *Is this project funding fuel costs?* `r dat$fuel_costs `
+
+**Project Description and Justification:** `r dat$goals_and_justification`
+
+## Detailed Collection Procedures
+
+**Detailed Collection Procedures:** `r dat$detailed_collection_procedures`
+
+**Subsample Selectively:** `r dat$criteria_for_selecting_specimens` 
+
+**Estimated time:** `r dat$estimated_time`
+
+## Biological Collection Details
+
+   - *Species To Be Collected:* `r dat$animal_type``r ifelse(is.na(dat$species_name), "", paste0("  - ", dat$species_name))`
+   - *Type of specimen to collect:* `r dat$specimen_type`
+   - *Specimen-level data to collect:* `r dat$specimen_data`
+   - *Specimen preservation method:* `r dat$specimen_preservation_method`
+
+## Sampling Design Details
+
+**Target Quantity:** `r dat$target `
+
+**Will the request still be useful if the requested amount or frequency of specimens collected is not achieved?** `r dat$if_the_requested_amount_or_frequency_of_specimens_is_not_achieved_will_the_request_still_be_useful `
+
+**What is the sampling protocol:** `r dat$sampling_design`
+
+**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$criteria_for_selecting_specimens`
+
+## Geographic Region of Collection
+
+**Survey:** `r dat$survey`
+
+**Place keywords:** `r dat$place_keywords`
+
+**Bounding coordinates**
+
+  - *Northern Boundary:* `r dat$northern_boundary`
+  - *Southern Boundary:* `r dat$southern_boundary`
+  - *Eastern Boundary:* `r dat$eastern_boundary`
+  - *Western Boundary:* `r dat$western_boundary`
+
+## Chemicals, Supplies, Equipment, and Shipping
+
+**Project Chemicals:**  
+
+   - *Formaldehyde solutions:* `r dat$project_chemicals_formaldehyde `
+   - *Ethanol solutions:* `r dat$project_chemicals_ethanol `
+   - *glycerol/thymol:* `r dat$project_chemicals_glycerol_thymol `
+   - *DNA buffer (DMSO/EDTA/NaCl):* `r dat$project_chemicals_dna_buffer_dmso_edta_na_cl `
+
+**Project Supplies:** 
+
+   - *Supplies provided by the AFSC:* `r dat$afsc_supplies `
+   - *Supplies provided by the requester:* `r dat$requester_supplies ` 
+
+**Detailed Shipping Instructions:** `r dat$detailed_shipping_instructions `
+
+**Permits issued or pending:** `r dat$additional_permits_issued_or_pending `
+
