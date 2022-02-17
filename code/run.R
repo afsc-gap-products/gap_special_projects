@@ -22,9 +22,18 @@ source('./code/data.R')
 
 for (i in 1:nrow(data1)) {
   dat <- data1[i,]
+  file_name <- paste0(maxyr, "-", dat$last_name, "-", 
+                      janitor::make_clean_names(dat$title), ".docx")
   rmarkdown::render(paste0("./code/template.Rmd"),
                     output_dir = dir_out,
-                    output_file = paste0(dir_out,
-                                         maxyr, "-", dat$last_name, "-", 
-                                         janitor::make_clean_names(dat$title), ".docx"))
+                    output_file = paste0(dir_out, file_name))
+  temp=strsplit(x = dat$survey, split = ", ")[[1]]
+for (ii in 1:length(temp)) {
+  dir.create(paste0(dir_out, temp[ii]), showWarnings = F)
+  file.copy(file_name, from=dir_out, to=paste0(dir_out, temp[ii]), overwrite = T)
+
+  }
+
+
 }
+

@@ -2,7 +2,7 @@
 title: "`r dat$title`"
 author: 
 - affiliation: "`r dat$affiliation`"
-  email: "`r dat$username`"
+  email: "`r dat$email_address`"
   name: "`r dat$requester_name`"
 addr: 
   l1: "`r dat$x24_7_contact_phone_number`"
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-### **Requester:** `r dat$requester_name` (`r dat$username`; `r dat$x24_7_contact_phone_number `)
+### **Requester:** `r dat$requester_name` (`r dat$email_address`; `r dat$x24_7_contact_phone_number `)
 
 ### **Affiliation:** `r dat$affiliation`
 
