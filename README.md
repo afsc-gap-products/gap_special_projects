@@ -2,7 +2,7 @@
 
 > Code is always in development
 
-This code produces word documents describing each special project request using {googledrive} and RMarkdown. 
+This code produces word documents describing each special project request for all GAP surveys using {googledrive} and RMarkdown. 
 
 ## This code is primarily maintained by: 
 
