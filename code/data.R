@@ -8,22 +8,17 @@
 # Load Data ----------------------------------------------------
 
 # Google drive Spreadsheets
-# https://drive.google.com/drive/folders/1Vbe_mH5tlnE6eheuiSVAFEnsTJvdQGD_?usp=sharing
-# a <- googledrive::drive_ls(path = googledrive::as_id("1Vbe_mH5tlnE6eheuiSVAFEnsTJvdQGD_"), type = "spreadsheet")
-# for (i in 1:nrow(a)){
-#   googledrive::drive_download(file = googledrive::as_id(a$id[i]), 
-#                               type = "xlsx", 
-#                               overwrite = TRUE, 
-#                               path = paste0(dir_out_rawdata, "/", a$name[i]))
-# }
+  googledrive::drive_download(file = googledrive::as_id(dir_gdrive),
+                              type = "csv",
+                              overwrite = TRUE,
+                              path = paste0("./data/dat"))
 
-
-## Local Data -------------------------------------------------------------
+# Local Data -------------------------------------------------------------
 a<-list.files(path = here::here("data"))
 a<-a[a != "empty.txt"]
 for (i in 1:length(a)){
   print(a[i])
-  b <- readr::read_csv(file = paste0(here::here("data", a[i]))) %>% 
+  b <- readr::read_csv(file = paste0(here::here("data", a[i]))) %>%
     janitor::clean_names(.)
   if (names(b)[1] %in% "x1"){
     b$x1<-NULL

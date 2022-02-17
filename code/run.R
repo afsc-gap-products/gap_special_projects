@@ -11,10 +11,14 @@
 # *** REPORT KNOWNS ------------------------------------------------------------
 
 maxyr <- 2022
+dir_out <- paste0("./output/", Sys.Date(),"/")
+
+googledrive::drive_auth()
+1
+dir_gdrive <- "1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k" # https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing
 
 # *** SOURCE SUPPORT SCRIPTS ---------------------------------------------------
 
-dir_out <- paste0("./output/", Sys.Date(),"/")
 source('./code/functions.R')
 source('./code/data.R')
 

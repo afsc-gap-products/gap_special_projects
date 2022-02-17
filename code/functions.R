@@ -10,6 +10,7 @@ PKG <- c(
   "magrittr",
   "readr",
   "janitor", 
+  "googledrive", 
   
   # Text Management
   "stringr")
