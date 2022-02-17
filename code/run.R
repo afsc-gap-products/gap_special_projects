@@ -22,7 +22,7 @@ dir_gdrive <- "1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k" # https://docs.goog
 source('./code/functions.R')
 source('./code/data.R')
 
-# Check work -------------------------------------------------------------------
+# Run RMarkdowns to create word docs from google spreadsheet -------------------------------------------------------------------
 
 for (i in 1:nrow(data1)) {
   
