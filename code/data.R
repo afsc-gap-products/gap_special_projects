@@ -20,6 +20,7 @@
 
 ## Local Data -------------------------------------------------------------
 a<-list.files(path = here::here("data"))
+a<-a[a != "empty.txt"]
 for (i in 1:length(a)){
   print(a[i])
   b <- readr::read_csv(file = paste0(here::here("data", a[i]))) %>% 
@@ -34,7 +35,7 @@ for (i in 1:length(a)){
 data1 <- data0 %>%
   dplyr::mutate(affiliation = gsub(pattern = " - ",
                                    replacement = "-",
-                                   x = affiliation,
+                                   x = as.character(affiliation),
                                    fixed = TRUE),
                 affiliation = gsub(pattern = "-",
                                    replacement = " - ",
@@ -42,11 +43,8 @@ data1 <- data0 %>%
                                    fixed = TRUE),
                 survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
   tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
-                  sep = " ", remove = FALSE) 
-
-
-data1 <- data1 %>% #TOLEDO, need to double check!
-  dplyr::mutate(
+                  sep = " ", remove = FALSE) %>% 
+  dplyr::mutate( # TOLEDO, need to double check!
     target = dplyr::case_when(
       is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
         "No maximum or minimum quantity. ",

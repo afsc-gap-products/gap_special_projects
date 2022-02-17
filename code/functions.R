@@ -12,7 +12,6 @@ PKG <- c(
   "janitor", 
   
   # Text Management
-  "NMFSReports",
   "stringr")
 
 
