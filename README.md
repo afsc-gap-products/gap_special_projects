@@ -2,11 +2,13 @@
 
 > Code is always in development
 
+This code produces word documents describing each special project request using {googledrive} and RMarkdown. 
+
 ## This code is primarily maintained by: 
 
-**Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA)
+**Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA) (maintainer)
 
-**Emily Markowitz** (Emily.Markowitz AT noaa.gov; @EmilyMarkowitz-NOAA)
+**Emily Markowitz** (Emily.Markowitz AT noaa.gov; @EmilyMarkowitz-NOAA) (initial developer)
 
 Alaska Fisheries Science Center, 
 
