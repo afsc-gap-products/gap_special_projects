@@ -1,4 +1,4 @@
-# AFSC RACE GAP Bering Sea Survey Data Report (`gap_special_projects`)
+# AFSC RACE GAP Special Projects Reports (`gap_special_projects`)
 
 > Code is always in development
 
