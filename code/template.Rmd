@@ -32,6 +32,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Project Description and Justification:** `r dat$goals_and_justification`
 
+```{r}
+```
+
 ## Detailed Collection Procedures
 
 **Detailed Collection Procedures:** `r dat$detailed_collection_procedures`
@@ -46,6 +49,9 @@ knitr::opts_chunk$set(echo = TRUE)
    - *Type of specimen to collect:* `r dat$specimen_type`
    - *Specimen-level data to collect:* `r dat$specimen_data`
    - *Specimen preservation method:* `r dat$specimen_preservation_method`
+
+```{r}
+```
 
 ## Sampling Design Details
 
@@ -69,6 +75,9 @@ knitr::opts_chunk$set(echo = TRUE)
   - *Southern Boundary:* `r dat$southern_boundary`
   - *Eastern Boundary:* `r dat$eastern_boundary`
   - *Western Boundary:* `r dat$western_boundary`
+
+```{r}
+```
 
 ## Chemicals, Supplies, Equipment, and Shipping
 

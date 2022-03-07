@@ -12,7 +12,7 @@
 
 maxyr <- 2022
 dir_out <- paste0("./output/", Sys.Date(),"/")
-
+access_to_internet <- TRUE
 googledrive::drive_auth()
 1
 dir_gdrive <- "1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k" # https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing

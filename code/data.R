@@ -5,15 +5,50 @@
 #' Notes: 
 #' ---------------------------------------------
 
-# Load Data ----------------------------------------------------
+# Run example ------------------------------------------------------------------
 
-# Google drive Spreadsheets
+data0_ex <- readr::read_csv(file = paste0(here::here("example", "dat.csv"))) %>%
+  janitor::clean_names(.)
+if (names(b)[1] %in% "x1"){
+  b$x1<-NULL
+}
+data1 <- edit_data(data0 = data0_ex)
+
+for (i in 1:nrow(data1)) {
+  
+  dat <- data1[i,]
+  
+  file_name <- paste0(maxyr, "-", dat$last_name, "-", 
+                      janitor::make_clean_names(dat$title), ".docx")
+  
+  rmarkdown::render(paste0("./code/template.Rmd"),
+                    output_dir = here::here("example"),
+                    output_file = file_name)
+  
+  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
+  
+  for (ii in 1:length(temp)) {
+    
+    dir.create(paste0(dir_out, temp[ii]), showWarnings = F)
+    
+    file.copy(from = paste0(dir_out, file_name), 
+              to = paste0(dir_out, temp[ii], "/", file_name), 
+              overwrite = TRUE)
+    
+  }
+  
+}
+
+
+# Downoad Google drive Spreadsheets -------------------------------------
+if (access_to_internet) {
   googledrive::drive_download(file = googledrive::as_id(dir_gdrive),
                               type = "csv",
                               overwrite = TRUE,
                               path = paste0("./data/dat"))
+}
 
-# Local Data -------------------------------------------------------------
+# Load Data -------------------------------------------------------------
 a<-list.files(path = here::here("data"))
 a<-a[a != "empty.txt"]
 for (i in 1:length(a)){
@@ -27,38 +62,5 @@ for (i in 1:length(a)){
   assign(x = gsub(pattern = "\\.csv", replacement = "", x = paste0("data0")), value = b)
 }
 
-data1 <- data0 %>%
-  dplyr::mutate(affiliation = gsub(pattern = " - ",
-                                   replacement = "-",
-                                   x = as.character(affiliation),
-                                   fixed = TRUE),
-                affiliation = gsub(pattern = "-",
-                                   replacement = " - ",
-                                   x = affiliation,
-                                   fixed = TRUE),
-                survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
-  tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
-                  sep = " ", remove = FALSE) %>% 
-  dplyr::mutate( # TOLEDO, need to double check!
-    target = dplyr::case_when(
-      is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
-        "No maximum or minimum quantity. ",
-      is.na(minimum_number_of_specimens) & !is.na(maximum_number_of_specimens) ~ 
-        paste0("Maximum speciment quantity: ", maximum_number_of_specimens), 
-      is.na(maximum_number_of_specimens) & !is.na(minimum_number_of_specimens) ~ 
-        paste0("Minimum speciment quantity: ", minimum_number_of_specimens), 
-      # is.character(minimum_number_of_specimens) ~ minimum_number_of_specimens, 
-      # is.numeric(minimum_number_of_specimens) & is.numeric(maximum_number_of_specimens) ~ 
-      #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
-      TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
-    ), 
-    across(where(is.character), 
-           gsub, pattern = " , ", replace = ", "), 
-    across(where(is.character), 
-           gsub, pattern = " ; ", replace = "; "), 
-    across(where(is.character), 
-           gsub, pattern = "none", replace = "[None]"), 
-    across(where(is.character), 
-           ~tidyr::replace_na(data = ., replace = "[None]")))
-  # dplyr::mutate(across(is.character(.), ~tidyr::replace_na(., "None. ")))
-  
+data1 <- edit_data(data0 = data0)
+
