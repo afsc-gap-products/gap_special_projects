@@ -6,9 +6,9 @@ This code produces word documents describing each special project request for al
 
 ## This code is primarily maintained by: 
 
-**Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA) (maintainer)
+**Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA; maintainer)
 
-**Emily Markowitz** (Emily.Markowitz AT noaa.gov; @EmilyMarkowitz-NOAA) (initial developer)
+**Emily Markowitz** (Emily.Markowitz AT noaa.gov; @EmilyMarkowitz-NOAA; initial developer)
 
 Alaska Fisheries Science Center, 
 
@@ -17,6 +17,10 @@ National Marine Fisheries Service,
 National Oceanic and Atmospheric Administration,
 
 Seattle, WA 98195
+
+## Example
+
+See the [example folder](https://github.com/afsc-gap-products/gap_special_projects/tree/main/example) to see what kind of data go in and report comes out of this code. 
 
 ## NOAA README
 
