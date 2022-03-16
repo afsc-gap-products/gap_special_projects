@@ -11,6 +11,16 @@ PKG <- c(
   "readr",
   "janitor", 
   "googledrive", 
+  "ggplot2", 
+  "cowplot", 
+  "magick",
+  
+  "grid", 
+  "gridExtra", 
+  
+  "flextable", 
+  "bookdown", 
+  # "posterdown", # remotes::install_github("brentthorne/posterdown")
   
   # Text Management
   "stringr")
