@@ -1,0 +1,12 @@
+---
+output:
+   pdf_document:
+     latex_engine: xelatex
+classoption: landscape
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+`r ft `
