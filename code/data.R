@@ -5,78 +5,63 @@
 #' Notes: 
 #' ---------------------------------------------
 
-# Run example ------------------------------------------------------------------
-
-data0_ex <- readr::read_csv(file = paste0(here::here("example", "dat.csv"))) %>%
-  janitor::clean_names(.)
-if (names(data0_ex)[1] %in% "x1"){
-  data0_ex$x1<-NULL
-}
-data1 <- edit_data(data0 = data0_ex)
-
-for (i in 1:nrow(data1)) {
-  
-  dat <- data1[i,]
-  
-  file_name <- paste0(maxyr, "-", dat$last_name, "-", 
-                      janitor::make_clean_names(dat$title), ".docx")
-  
-  rmarkdown::render(paste0("./code/template.Rmd"),
-                    output_dir = here::here("example"),
-                    output_file = file_name)
-  
-  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
-  
-  for (ii in 1:length(temp)) {
-    
-    dir.create(paste0(dir_out, temp[ii]), showWarnings = F)
-    
-    file.copy(from = paste0(dir_out, file_name), 
-              to = paste0(dir_out, temp[ii], "/", file_name), 
-              overwrite = TRUE)
-    
-  }
-  
-}
-
 
 # Downoad Google drive Spreadsheets -------------------------------------
 if (access_to_internet) {
-  googledrive::drive_download(file = googledrive::as_id(dir_gdrive),
+  googledrive::drive_download(file = googledrive::as_id(dir_gspecial),
                               type = "csv",
                               overwrite = TRUE,
-                              path = paste0("./data/dat"))
+                              path = paste0("./data/special"))
+  
+  googledrive::drive_download(file = googledrive::as_id(dir_gcore),
+                              type = "xlsx",
+                              overwrite = TRUE,
+                              path = paste0("./data/core"))
 }
 
 # Load Data -------------------------------------------------------------
 
-a<-list.files(path = here::here("data"))
-a<-a[a != "empty.txt"]
-for (i in 1:length(a)){
-  print(a[i])
-  b <- readr::read_csv(file = paste0(here::here("data", a[i]))) %>%
-    janitor::clean_names(.)
-  if (names(b)[1] %in% "x1"){
-    b$x1<-NULL
-  }
-  # assign(x = gsub(pattern = "\\.csv", replacement = "", x = paste0(a[i], "0")), value = b)
-  assign(x = gsub(pattern = "\\.csv", replacement = "", x = paste0("data0")), value = b)
+all_na <- function(x) any(!is.na(x))
+
+special0 <- readr::read_csv(file = paste0(here::here("data", "special.csv"))) %>% 
+  janitor::clean_names()
+
+stomachs0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
+                            sheetName = "Stomachs", startRow = 2) %>% 
+  dplyr::select_if(all_na) %>% 
+  dplyr::filter(year == maxyr)
+
+otoliths0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
+                            sheetName = "Otoliths", startRow = 2) %>% 
+  dplyr::select_if(all_na) %>% 
+  dplyr::filter(year == maxyr)
+
+crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
+                        sheetName = "Crab", startRow = 2) %>% 
+  dplyr::select_if(all_na) %>% 
+  dplyr::filter(year == maxyr)
+
+# Wrangle special project data -----------------------------------------------------------------
+
+special <- edit_data(data0 = special0) %>% 
+  dplyr::mutate(vessel = toupper(vessel))
+
+if (subset_to_accepted_projects){
+special <- special %>% 
+  dplyr::mutate(project_accepted_t_f = ifelse(is.na(project_accepted_t_f), TRUE, FALSE)) %>%
+  dplyr::filter(project_accepted_t_f == TRUE)
 }
 
-# Wrangle data -----------------------------------------------------------------
+vess <- unique(special$vessel)[!grepl(pattern = ",", x = unique(special$vessel)) & 
+                               (unique(special$vessel) != "[NONE]")]
+for (i in 1:length(vess)) {
+  special$temp <- ifelse(grepl(pattern = vess[i], x = special$vessel, fixed = TRUE), 
+                       TRUE, FALSE)
+  names(special)[names(special) == "temp"] <- paste0("vess_", janitor::make_clean_names(vess[i]))
+}
 
-data1 <- edit_data(data0 = data0) %>% 
+special <- special %>% 
   dplyr::mutate(
-    
-    # TOLEDO - fake for poster
-    title_short = title,  
-    notes = "[no notes]", # TOLEDO - fake for poster
-    vessel = rep_len(x = c("a", "b", "a, b"), length.out = nrow(.)), # TOLEDO - fake vessel assignments 
-    desc = substr(x = paste0(detailed_collection_procedures, "\n", 
-                             gsub(pattern = ", ", replacement = "\n", x = species_name)), 
-                  start = 1, stop = 1000), # TOLEDO - fake short description) %>% 
-    
-    # real
     sap_gap = dplyr::case_when(
       animal_type == "crab" ~ "sap", 
       TRUE ~ "gap"),     
@@ -99,12 +84,12 @@ data1 <- edit_data(data0 = data0) %>%
                sep = " or ") %>% 
   dplyr::mutate(preserve = ifelse(is.na(preserve), "", preserve))
 
-comb <- unique(strsplit(x = paste(data1$vessel, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
-for (i in 1:length(comb)) {
-  data1 <- data1 %>% 
-    dplyr::mutate(temp = unlist(lapply(X = vessel, grepl, pattern = comb[i]))) 
-  names(data1)[names(data1) == "temp"] <- paste0("vess_", comb[i])
-}
+# comb <- unique(strsplit(x = paste(special$vessel, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
+# for (i in 1:length(comb)) {
+#   special <- special %>% 
+#     dplyr::mutate(temp = unlist(lapply(X = vessel, grepl, pattern = comb[i]))) 
+#   names(special)[names(special) == "temp"] <- paste0("vess_", comb[i])
+# }
 
 s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"), 
                 survey = c("Northern Bering Sea", 
@@ -113,10 +98,10 @@ s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"),
                            "Aleutian Islands", 
                            "Bering Sea Slope") )
 
-comb <- unique(strsplit(x = paste(data1$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
+comb <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
 for (i in 1:length(comb)) {
-  data1 <- data1 %>% 
+  special <- special %>% 
     dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb[i]))) 
-  names(data1)[names(data1) == "temp"] <- paste0("srvy_", s$srvy[s$survey == comb[i]])
+  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$survey == comb[i]])
 }
 
