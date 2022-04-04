@@ -179,7 +179,9 @@ poster_special <- function(dat0,
                            row_lines = TRUE, 
                            title = ""){
   
-  if (nrow(dat0) <= 8) {
+  if (nrow(dat0) <= 1) {
+    nnn <- 1
+  } else if (nrow(dat0) <= 8) {
     nnn <- 2
   } else if (nrow(dat0) <= 12)  {
     nnn <- 3
@@ -197,9 +199,11 @@ poster_special <- function(dat0,
   if (comb1$to[nrow(comb1)]-nrow(dat0) != 0) {
     d <- data.frame(matrix(data = "", 
                            nrow = (comb1$to[nrow(comb1)]-nrow(dat0)),
-                           ncol = nnn))
+                           ncol = ncol(dat0)))
     names(d) <- names(dat0)
     dat0 <- dplyr::bind_rows(dat0, d)
+  # } else if (comb1$to[nrow(comb1)]-nrow(dat0) > 0) {
+  #   comb1$to[nrow(comb1)] <- nrow(dat0)
   }
   
   dat0000 <- data.frame()
@@ -214,6 +218,8 @@ poster_special <- function(dat0,
     }
   }
   
+  # flextable::as_image(src = "./img/snowflake.png", width = .20, height = .15),                
+  
   cc <- 1:nrow(comb1)
   
   ft <- eval(parse(text = paste0('flextable::flextable(dat0000, 
@@ -221,11 +227,17 @@ poster_special <- function(dat0,
                                  paste0(' %>%
     flextable::compose(j = "dummy',cc,'",
                        value = as_paragraph(
-                         flextable::as_chunk(paste0((short_name',cc,'), "\n"), 
+                          flextable::as_chunk(paste0((short_name',cc,')), 
                                   props = fp_text_default(color = "#006699", # "white", 
                                                           bold = TRUE, 
                                                           # shading.color	= "#006699",
-                                                          font.size = ',textsize+8,')),
+                                                          font.size = ',textsize+8,')), 
+                          flextable::as_image(src =
+                                     ifelse(grepl(x = preserve',cc,', pattern = "freeze"),
+                                     "./img/snowflake.png",
+                                     "./img/blank.png"),
+                                                   width = .3, height = .3),
+                          "\n",
                           flextable::as_chunk(toupper(paste0(last_name',cc,', "\n")), 
                                   props = fp_text_default(color = "black",
                                                           bold = TRUE, 

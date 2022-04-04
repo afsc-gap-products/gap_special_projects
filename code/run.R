@@ -15,6 +15,8 @@
 
 maxyr <- 2022
 dir_out <- paste0("./output/", Sys.Date(),"/")
+dir.create(dir_out, showWarnings = F)
+
 subset_to_accepted_projects <- FALSE
 
 access_to_internet <- TRUE
