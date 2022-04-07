@@ -17,7 +17,7 @@ maxyr <- 2022
 dir_out <- paste0("./output/", Sys.Date(),"/")
 dir.create(dir_out, showWarnings = F)
 
-subset_to_accepted_projects <- FALSE
+subset_to_accepted_projects <- TRUE
 
 access_to_internet <- TRUE
 googledrive::drive_auth()
@@ -35,10 +35,9 @@ source('./code/functions.R')
 source('./code/ex.R')
 source('./code/data.R')
 
-
 # Run RMarkdowns to create word docs from google spreadsheet --------------------
 
-for (i in 1:nrow(data1)) {
+for (i in 1:nrow(special)) {
   
   dat <- special[i,]
   
@@ -71,15 +70,26 @@ file.remove(a)
 
 # Special projects posters by vessel and survey ------------------------------------
 
-comb <- tidyr::crossing( # the different combination of posters we will need to make
-  srvy = special %>%
-    dplyr::select(dplyr::starts_with("srvy_")) %>% 
-    names(), #  %>% gsub(pattern = "srvy_", replacement = "", x = .)
-  vess = special %>%
-    dplyr::select(dplyr::starts_with("vess_")) %>% 
-    names(), 
-  sap_gap = unique(special$sap_gap)) #  %>% gsub(pattern = "vess_", replacement = "", x = .)
+# comb <- tidyr::crossing( # the different combination of posters we will need to make
+#   srvy = special %>%
+#     dplyr::select(dplyr::starts_with("srvy_")) %>% 
+#     names(), #  %>% gsub(pattern = "srvy_", replacement = "", x = .)
+#   vess = special %>%
+#     dplyr::select(dplyr::starts_with("vess_")) %>% 
+#     names(), 
+#   sap_gap = unique(special$sap_gap)) #  %>% gsub(pattern = "vess_", replacement = "", x = .)
 
+comb <- data.frame(srvy = c("srvy_AI", "srvy_AI", 
+                            "srvy_EBS", "srvy_EBS", "srvy_EBS", "srvy_EBS", 
+                            "srvy_NBS", "srvy_NBS", "srvy_NBS", "srvy_NBS"), 
+                   vess = c("vess_ocean_explorer", "vess_ak_provider", 
+                            "vess_ak_knight", "vess_ak_knight", 
+                            "vess_vesteraalen", "vess_vesteraalen",
+                            "vess_ak_knight", "vess_ak_knight", 
+                            "vess_vesteraalen", "vess_vesteraalen"), 
+                   sap_gap = c("gap", "gap", 
+                               "gap", "sap", "gap", "sap", 
+                               "gap", "sap", "gap", "sap"))
 
 path0 <-paste0(dir_out, "posters_special/")
 dir.create(path = path0)
@@ -89,9 +99,9 @@ for (i in 1:nrow(comb)) {
   # subset the data
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE & 
-                     special$sap_gap == comb$sap_gap[i]), ] %>% 
+                     special$sap_gap == comb$sap_gap[i]), ]  %>% 
     dplyr::arrange(desc(numeric_priority)) %>% 
-    dplyr::select(short_name, last_name, preserve, short_procedures) 
+    dplyr::select(short_name, pi, preserve, short_procedures) 
   
   if (nrow(dat0) != 0) {
     
@@ -109,9 +119,9 @@ for (i in 1:nrow(comb)) {
     
     # PDF
     flextable::save_as_image(x = poster_special(dat0 = dat0,
-                                                textsize = 10,
+                                                textsize = 16,
                                                 title = title,
-                                                spacing = 1.5,
+                                                spacing = 1.2,
                                                 pad = 10),
                              path = paste0(path0, file_name0,".pdf"),
                              zoom = 1, expand = 1)
@@ -170,13 +180,13 @@ for (i in 1:nrow(comb)) {
     title <- paste0(
       maxyr, " ",  
       gsub(pattern = "srvy_", replacement = "", x = comb$survey[i]), 
-      " Survey Core Otoliths")
+      " Survey Core Otolith Collections")
     
     # PDF
     flextable::save_as_image(x = poster_otolith(dat0 = dat0,
-                                                textsize = 40,
+                                                textsize = 35,
                                                 title = title,
-                                                spacing = 1.5,
+                                                spacing = 1.2,
                                                 pad = 10),
                              path = paste0(path0, file_name0,".pdf"),
                              zoom = 1, expand = 1)
@@ -196,7 +206,7 @@ for (i in 1:nrow(comb)) {
     ft <- poster_otolith(dat0 = dat0, 
                          textsize = 40,
                          pad = 10,
-                         spacing = 1.4,
+                         spacing = 1.2,
                          title = title)
     
     rmarkdown::render(paste0("./code/template_pptx.Rmd"),

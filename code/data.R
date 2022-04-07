@@ -48,7 +48,7 @@ special <- edit_data(data0 = special0) %>%
 
 if (subset_to_accepted_projects){
 special <- special %>% 
-  dplyr::mutate(project_accepted_t_f = ifelse(is.na(project_accepted_t_f), TRUE, FALSE)) %>%
+  # dplyr::mutate(project_accepted_t_f = ifelse(is.na(project_accepted_t_f), TRUE, FALSE)) %>%
   dplyr::filter(project_accepted_t_f == TRUE)
 }
 
@@ -63,6 +63,8 @@ for (i in 1:length(vess)) {
 special <- special %>% 
   dplyr::mutate(
     sap_gap = dplyr::case_when(
+      grepl(pattern = "Aleutian Islands", x = survey) == TRUE ~ "gap", 
+      grepl(pattern = "Gulf of Alaska", x = survey) == TRUE ~ "gap", 
       animal_type == "crab" ~ "sap", 
       TRUE ~ "gap"),     
     preserve_freeze = 

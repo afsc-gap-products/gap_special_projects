@@ -202,9 +202,11 @@ poster_special <- function(dat0,
                            ncol = ncol(dat0)))
     names(d) <- names(dat0)
     dat0 <- dplyr::bind_rows(dat0, d)
-  # } else if (comb1$to[nrow(comb1)]-nrow(dat0) > 0) {
-  #   comb1$to[nrow(comb1)] <- nrow(dat0)
+    # } else if (comb1$to[nrow(comb1)]-nrow(dat0) > 0) {
+    #   comb1$to[nrow(comb1)] <- nrow(dat0)
   }
+  
+  # dat0 <- dat0
   
   dat0000 <- data.frame()
   
@@ -231,19 +233,23 @@ poster_special <- function(dat0,
                                   props = fp_text_default(color = "#006699", # "white", 
                                                           bold = TRUE, 
                                                           # shading.color	= "#006699",
-                                                          font.size = ',textsize+8,')), 
+                                                          font.size = ',textsize+6,')), 
+                          "\n",
+                          flextable::as_chunk(toupper(paste0(pi',cc,', "\n")), 
+                                  props = fp_text_default(color = "black",
+                                                          bold = TRUE, 
+                                                          font.size = ',textsize+2,')),
+                          flextable::as_i(paste0(preserve',cc,')),
+                          "  ",                                 
                           flextable::as_image(src =
                                      ifelse(grepl(x = preserve',cc,', pattern = "freeze"),
                                      "./img/snowflake.png",
                                      "./img/blank.png"),
-                                                   width = .3, height = .3),
+                                                   width = .3, height = .3),  
                           "\n",
-                          flextable::as_chunk(toupper(paste0(last_name',cc,', "\n")), 
-                                  props = fp_text_default(color = "black",
-                                                          bold = TRUE, 
-                                                          font.size = ',textsize+2,')),
-  flextable::as_i(paste0(preserve',cc,', "\n\n")),
-  paste0(short_procedures',cc,')))', collapse = ""), collapse = "") )) %>%
+
+                          paste0(short_procedures',cc,')))', 
+                  collapse = ""), collapse = "") )) %>%
     # flextable::autofit(x, add_w = 0.1, add_h = 0.1, part = c("body", "header"), unit = "in") %>% 
     # flextable::fontsize(x = ., size = 20) %>% 
     theme_poster(body_size = textsize, 
@@ -256,7 +262,7 @@ poster_special <- function(dat0,
     flextable::color(x = ., color = "grey20") %>%
     flextable::set_header_labels(x = .,
                                  "dummy1" = title)  %>%
-    flextable::width(x = ., width = 48/4, unit = "in") %>%
+    flextable::width(x = ., width = 100/nnn, unit = "in") %>%
     flextable::line_spacing(x = ., space = spacing, part = "all") %>% 
     flextable::padding(x = ., padding = pad, part = "all") %>% 
     flextable::hline(x = ., 
@@ -272,8 +278,26 @@ poster_otolith <- function(dat0,
                            row_lines = TRUE, 
                            title = ""){
   
-  ft <- #flextable::as_grouped_data(x = dat0000, groups = c("plan")) %>%
-    flextable::flextable(data = dat0) %>%
+  # as_flextable(x, col_keys = NULL, hide_grouplabel = FALSE, ...)
+  
+  # plan <- plan0 <- ifelse(length(unique(dat0$plan)) == 1, 
+  #                 "Sampling plan for all", 
+  #                 "Sampling plan")
+  
+  dat000 <- dat0 %>% 
+    dplyr::arrange(plan, species, n_per_haul)
+  
+  names(dat000)[names(dat0) == "plan"] <- "Sampling plan"
+  
+  # prep for merged cells
+  n_missing <- which(is.na(dat000$n_per_haul))
+  dat000$n_per_haul[n_missing] <- dat000$criteria[n_missing]
+  
+  ft <- flextable::as_grouped_data(
+      x = dat000, 
+      groups = c("Sampling plan")) %>%
+    flextable::as_flextable(x = .) %>% # , hide_grouplabel = TRUE
+    # flextable::flextable(data = dat0) %>%
     flextable::theme_zebra(x = ., 
                            odd_header = "darkolivegreen3", 
                            even_header  = "darkolivegreen3",
@@ -281,13 +305,17 @@ poster_otolith <- function(dat0,
     flextable::add_header(x = ., 
                           n_per_haul = title,
                           criteria = title,
-                          plan = title, 
-                          species = title, top = TRUE ) %>%
-    flextable::merge_h(x = ., i = 1, part = "header") %>%
-    flextable::merge_v(x = ., j="plan") %>%
+                          # "Sampling plan" = title,
+                          species = title,
+                          top = TRUE ) %>%
+    flextable::merge_h(x = ., part = "header", i = 1) %>% 
+  
+
+    # flextable::merge_h(x = ., i = 1, part = "header") %>%
+    
+    # flextable::merge_v(x = ., j="plan") %>%
     # flextable::bold(x = ., j = "plan", bold = TRUE) %>%
     flextable::set_header_labels(x = .,
-                                 "plan" = "", 
                                  "species" = "Species", 
                                  "n_per_haul" = "Target Number per Plan", 
                                  "criteria" = "Rules") %>% 
@@ -295,13 +323,43 @@ poster_otolith <- function(dat0,
     flextable::font(x = ., fontname = "Arial") %>%
     flextable::fontsize(x = ., size = textsize, part = "body") %>% 
     flextable::fontsize(x = ., i = 1, size = textsize+20, part = "header") %>% 
+    flextable::bg(x = ., i = 1, bg = "white", part = "header") %>% 
     flextable::fontsize(x = ., i = 2, size = textsize+4, part = "header") %>% 
-    flextable::width(x = ., width = 48/4, unit = "in") %>%
+    flextable::width(x = ., width = c(6,4,10), unit = "in") %>%
     flextable::line_spacing(x = ., space = spacing, part = "all") %>% 
     flextable::padding(x = ., padding = pad, part = "all") %>% 
+    flextable::align(x = ., align = "center", part = "all") %>%
+    flextable::align(x = ., j = "criteria", align = "left", part = "body") %>%
     flextable::hline(x = ., 
                      border = officer::fp_border(width = 0.5, color = "grey10"), 
-                     part = "body")
+                     part = "body") %>% 
+      flextable::bold(x = ., j = 1, i = ~ !is.na(`Sampling plan`), part = "body")    %>% 
+      flextable::bg(x = ., j = 1, i = ~ !is.na(`Sampling plan`), 
+                    bg = "blanchedalmond", part = "body")
+  
+  
+  if (length(n_missing)>0) {
+    for (iii in length(n_missing)) {
+      ft <- ft %>% 
+        flextable::merge_at(x = .,
+                            i = n_missing[iii]+1, # +1 bc extra header line
+                            j = c("n_per_haul", "criteria"),
+                            part = "body") %>% 
+        flextable::align(x = ., 
+                         j = "n_per_haul", 
+                         i = n_missing[iii]+1, 
+                         align = "left", 
+                         part = "body") 
+    }
+  }
+  # if (plan == "Sampling plan for all") {
+  #   ft <- ft  %>% 
+  #     flextable::bold(x = ., j = 1, i = ~ !is.na(`Sampling plan for all`), part = "body")   %>% 
+  #     flextable::bg(x = ., j = 1, i = ~ !is.na(`Sampling plan for all`), 
+  #                   bg = "blanchedalmond", part = "body")
+  # } else {
+    # ft <- ft  
+  # }
   # flextable::autofit()
   
   return(ft)
