@@ -1,0 +1,44 @@
+---
+output:
+   pdf_document:
+     fig_caption: false
+     latex_engine: xelatex
+geometry: margin=0.1cm
+---
+
+```{r setup, include=FALSE}
+
+# classoptions: landscape
+
+
+# output:
+#    pdf_document:
+#      fig_caption: false
+
+
+# classoption: 
+#   - landscape
+#   - a0paper
+# \eject \pdfpagewidth=48in \pdfpageheight=32in
+# \clearpage
+# \thispagestyle{empty}
+
+
+# \pdfpageheight=32in
+# 
+# \pdfpagewidth=48in
+
+knitr::opts_chunk$set(echo = FALSE)
+
+#  %>% flextable::autofit(x = .)
+# ft
+
+```
+
+
+\pdfpageheight=8in
+
+\pdfpagewidth=12in
+
+`r ft `
+

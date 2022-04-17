@@ -1,0 +1,27 @@
+---
+output:
+   pdf_document:
+     fig_caption: false
+     latex_engine: xelatex
+geometry: margin=0.1cm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = "asis")
+
+# \pdfpageheight=18in
+
+# \pdfpageheight=30in
+# 
+# \pdfpagewidth=12in
+
+```
+
+\pagenumbering{gobble}
+
+\pdfpageheight=12in
+
+\pdfpagewidth=8in
+
+`r ft `
+
