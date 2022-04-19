@@ -19,7 +19,7 @@ if (access_to_internet) {
                               path = paste0("./data/core"))
 }
 
-# Load Data -------------------------------------------------------------
+# Load Data --------------------------------------------------------------------
 
 all_na <- function(x) any(!is.na(x))
 
@@ -41,10 +41,12 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
   dplyr::select_if(all_na) %>% 
   dplyr::filter(year == maxyr)
 
-# Wrangle special project data -----------------------------------------------------------------
+# Wrangle special project data -------------------------------------------------
 
 special <- edit_data(data0 = special0) %>% 
-  dplyr::mutate(vessel = toupper(vessel))
+  dplyr::mutate(vessel = toupper(vessel), 
+                numeric_priority = ifelse(is.na(numeric_priority), 
+                                          (max(numeric_priority, na.rm = TRUE)+1), numeric_priority)) 
 
 if (subset_to_accepted_projects){
 special <- special %>% 

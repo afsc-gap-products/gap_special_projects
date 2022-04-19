@@ -6,6 +6,7 @@
 PKG <- c(
   # other tidyverse
   "tidyr",
+  # "plyr",
   "dplyr",
   "magrittr",
   "readr",
@@ -187,16 +188,8 @@ poster_special <- function(dat0,
                            odd_body = "#EFEFEF", 
                            fig_size = .5, 
                            in_markdown = TRUE){
-
-  # FitFlextableToPage <- function(x, pgwidth = 6){
-  #   # https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
-  #   ft_out <- x %>% flextable::autofit()
-  #   
-  #   ft_out <- flextable::width(x = ft_out, 
-  #                              width = dim(ft_out)$widths*pgwidth /(flextable::flextable_dim(ft_out)$widths), 
-  #                              unit = "in")
-  #   return(ft_out)
-  # }
+  
+  # Data restacking
 
   if (nrow(dat0) <= 1) {
     nnn <- 1
@@ -220,27 +213,43 @@ poster_special <- function(dat0,
                            nrow = (comb1$to[nrow(comb1)]-nrow(dat0)),
                            ncol = ncol(dat0)))
     names(d) <- names(dat0)
-    dat0 <- dplyr::bind_rows(dat0, d)
+    dat0 <- dplyr::bind_rows(dat0, 
+                             d %>% 
+                               dplyr::mutate(numeric_priority = as.numeric(numeric_priority)))
     # } else if (comb1$to[nrow(comb1)]-nrow(dat0) > 0) {
     #   comb1$to[nrow(comb1)] <- nrow(dat0)
   }
   
-  # dat0 <- dat0
+  dat0 <- dat0 %>% 
+    dplyr::mutate(numeric_priority = ifelse(grepl(pattern = "outreach", x = short_name, ignore.case = TRUE), 
+                                            (max(numeric_priority, na.rm = TRUE)+1), 
+                                            numeric_priority), 
+                  numeric_priority = ifelse(is.na(numeric_priority), 
+                                            (max(numeric_priority, na.rm = TRUE)+1), 
+                                            numeric_priority), 
+                  nchar_proc = nchar(short_procedures)) %>%
+    dplyr::arrange(numeric_priority, desc(nchar_proc) # 
+                   # plyr::round_any(nchar(short_procedures), 10, f = ceiling)
+                   ) %>% 
+    dplyr::mutate(col = rep_len(length.out = nrow(.), x = 1:nrow(comb1))) %>% 
+    dplyr::select(-numeric_priority, nchar_proc)
   
   dat0000 <- data.frame()
   
   for (ii in 1:nrow(comb1)) {
-    d <- dat0[c((comb1$from[ii]):(comb1$to[ii])),]
+  # arrange L->R, then Top->Down
+    d <- dat0[dat0$col == ii,]
     names(d) <- paste0(names(dat0), ii)
+    # # arrange Top->Down, then L->R 
+    #   d <- dat0[c((comb1$from[ii]):(comb1$to[ii])),]
+    #   names(d) <- paste0(names(dat0), ii)
     if (ii == 1) {
       dat0000 <- d
     } else {
       dat0000 <- dplyr::bind_cols(dat0000, d)
     }
   }
-  
-  # flextable::as_image(src = "./img/snowflake.png", width = .20, height = .15),                
-  
+
   cc <- 1:nrow(comb1)
   
   ft <- eval(parse(text = paste0('flextable::flextable(dat0000, 

@@ -1,10 +1,10 @@
-#' ---------------------------------------------
+#' -----------------------------------------------------------------------------
 #' title: Create special project sheets
 #' author: L Dawson (Liz.Dawson AT noaa.gov) and EH Markowitz (emily.markowitz AT noaa.gov)
 #' start date: 2022-02-16
 #' last modified: 2022-03-01
 #' Notes: 
-#' ---------------------------------------------
+#' -----------------------------------------------------------------------------
 
 # START ------------------------------------------------------------------------
 
@@ -69,28 +69,15 @@ dir.create(path = paste0(dir_out, "/all/"))
 file.copy(from = a, to = paste0(dir_out, "/all/"))
 file.remove(a)
 
-# Special projects posters by vessel and survey ------------------------------------
-
-# comb <- tidyr::crossing( # the different combination of posters we will need to make
-#   srvy = special %>%
-#     dplyr::select(dplyr::starts_with("srvy_")) %>% 
-#     names(), #  %>% gsub(pattern = "srvy_", replacement = "", x = .)
-#   vess = special %>%
-#     dplyr::select(dplyr::starts_with("vess_")) %>% 
-#     names(), 
-#   sap_gap = unique(special$sap_gap)) #  %>% gsub(pattern = "vess_", replacement = "", x = .)
+# Special projects posters by vessel and survey --------------------------------
 
 comb <- data.frame(srvy = c("srvy_AI", "srvy_AI", 
-                            "srvy_EBS", "srvy_EBS", "srvy_EBS", "srvy_EBS", 
-                            "srvy_NBS", "srvy_NBS", "srvy_NBS", "srvy_NBS"), 
+                            "srvy_EBS", "srvy_EBS", 
+                            "srvy_NBS", "srvy_NBS"), 
                    vess = c("vess_ocean_explorer", "vess_ak_provider", 
-                            "vess_ak_knight", "vess_ak_knight", 
-                            "vess_vesteraalen", "vess_vesteraalen",
-                            "vess_ak_knight", "vess_ak_knight", 
-                            "vess_vesteraalen", "vess_vesteraalen"), 
-                   sap_gap = c("gap", "gap", 
-                               "gap", "sap", "gap", "sap", 
-                               "gap", "sap", "gap", "sap"))
+                            "vess_ak_knight", "vess_vesteraalen", 
+                            "vess_ak_knight", "vess_vesteraalen"), 
+                   sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
 
 path0 <-paste0(dir_out, "posters_special/")
 dir.create(path = path0)
@@ -100,9 +87,8 @@ for (i in 1:nrow(comb)) {
   # subset the data
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE & 
-                     special$sap_gap == comb$sap_gap[i]), ]  %>% 
-    dplyr::arrange(desc(numeric_priority)) %>% 
-    dplyr::select(short_name, pi, preserve, short_procedures) 
+                     special$sap_gap == comb$sap_gap[i]), ] %>% 
+    dplyr::select(short_name, pi, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     
@@ -144,12 +130,12 @@ for (i in 1:nrow(comb)) {
                      (max(nchar(dat0$short_procedures)) < 360), 0, -2)
     
     ft <- poster_special(dat0 = dat0,
+                         title = title,
                          header_size = 12,
                          subheader_size = 8+adj0,
                          body_size = 7+adj0,
                          pgwidth = 11.6,
                          font = "Arial",
-                         title = title,
                          spacing = 1.6,
                          pad = 40, 
                          fig_size = .1, 
