@@ -88,7 +88,8 @@ for (i in 1:nrow(comb)) {
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE & 
                      special$sap_gap == comb$sap_gap[i]), ] %>% 
-    dplyr::select(short_name, pi, preserve, short_procedures, numeric_priority) 
+    dplyr::select(short_name, pi, preserve, short_procedures, numeric_priority) %>% 
+    dplyr::mutate(numeric_priority = ifelse(short_name == "Herring Collection", 6, numeric_priority)) # TOLEDO! Delete for 2023
   
   if (nrow(dat0) != 0) {
     
@@ -214,13 +215,13 @@ for (i in 1:nrow(comb)) {
     
     ft <- poster_otolith(dat0 = dat0,
                          title = title,
-                         header_size = 16,
-                         subheader_size = 14,
+                         header_size = 14,
+                         subheader_size = 12,
                          body_size = 12,
                          spacing = .9,
-                         pad = 1, # doesnt work, mybe next year https://ardata-fr.github.io/flextable-book/rendering.html#note_pdf
+                         pad = 1, # doesnt work, maybe next year https://ardata-fr.github.io/flextable-book/rendering.html#note_pdf
                          pgwidth = 7.6,
-                         col_spacing = c(1.5,1,4.6))
+                         col_spacing = c(1.5,1.4,4.2)) # must sum to pgwidth
 
     rmarkdown::render(paste0("./code/template_pdf_portrait.Rmd"),
                       output_dir = path0,
@@ -228,19 +229,19 @@ for (i in 1:nrow(comb)) {
     
     
     
-    ft <- poster_otolith(dat0 = dat0,
-                         title = title,
-                         header_size = 22,
-                         subheader_size = 20,
-                         body_size = 18,
-                         spacing = 1.2,
-                         pad = 10,
-                         pgwidth = 7.6,
-                         col_spacing = c(1.5,1.2,4.6))
-    
-    flextable::save_as_image(x = ft,
-                             path = paste0(path0, file_name0,"_1.pdf"), 
-                             zoom = 1,expand = 1, webshot = "webshot")
+    # ft <- poster_otolith(dat0 = dat0,
+    #                      title = title,
+    #                      header_size = 22,
+    #                      subheader_size = 20,
+    #                      body_size = 18,
+    #                      spacing = 1.2,
+    #                      pad = 10,
+    #                      pgwidth = 7.6,
+    #                      col_spacing = c(1.5,1.2,4.6))
+    # 
+    # flextable::save_as_image(x = ft,
+    #                          path = paste0(path0, file_name0,"_1.pdf"), 
+    #                          zoom = 1,expand = 1, webshot = "webshot")
     
     # flextable_to_rmd(x = ft, )
     

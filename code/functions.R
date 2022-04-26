@@ -411,6 +411,7 @@ poster_otolith <- function(dat0,
     flextable::bg(x = ., i = 1, bg = "white", part = "header") %>% 
     flextable::line_spacing(x = ., space = spacing, part = "all") %>% 
     flextable::padding(x = ., padding = pad, part = "all") %>% 
+    flextable::padding(x = ., j="species", padding.left = 5) %>% 
     flextable::align(x = ., align = "center", part = "all") %>%
     flextable::align(x = ., j = "criteria", align = "left", part = "body") %>%
     flextable::align(x = ., j = "species", align = "left", part = "body") %>%
