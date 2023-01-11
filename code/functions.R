@@ -60,9 +60,9 @@ edit_data <- function(data0) {
         is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
           "No maximum or minimum quantity. ",
         is.na(minimum_number_of_specimens) & !is.na(maximum_number_of_specimens) ~ 
-          paste0("Maximum speciment quantity: ", maximum_number_of_specimens), 
+          paste0("Maximum specimen quantity: ", maximum_number_of_specimens), 
         is.na(maximum_number_of_specimens) & !is.na(minimum_number_of_specimens) ~ 
-          paste0("Minimum speciment quantity: ", minimum_number_of_specimens), 
+          paste0("Minimum specimen quantity: ", minimum_number_of_specimens), 
         # is.character(minimum_number_of_specimens) ~ minimum_number_of_specimens, 
         # is.numeric(minimum_number_of_specimens) & is.numeric(maximum_number_of_specimens) ~ 
         #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
