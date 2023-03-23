@@ -9,7 +9,7 @@
 # Downoad Google drive Spreadsheets -------------------------------------
 if (access_to_internet) {
   googledrive::drive_download(file = googledrive::as_id(dir_gspecial),
-                              type = "csv",
+                              type = "xlsx",
                               overwrite = TRUE,
                               path = paste0("./data/special"))
   
@@ -23,7 +23,8 @@ if (access_to_internet) {
 
 all_na <- function(x) any(!is.na(x))
 
-special0 <- readr::read_csv(file = paste0(here::here("data", "special.csv"))) %>% 
+special0 <- xlsx::read.xlsx(file = paste0(here::here("data", "special.xlsx")), 
+                            sheetName = "Copy of ALL SURVEYS") %>% 
   janitor::clean_names()
 
 stomachs0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
@@ -43,16 +44,23 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
 
 # Wrangle special project data -------------------------------------------------
 
-special <- edit_data(data0 = special0) %>% 
+special <- edit_data(
+  data0 = special0 %>% 
+    dplyr::filter(!is.na(email_address))) %>% 
+  dplyr::rename(numeric_priority = order_of_importance, 
+                short_procedures = short_on_deck_collection_instructions_675_character_limit) %>% 
   dplyr::mutate(vessel = toupper(vessel), 
-                numeric_priority = ifelse(is.na(numeric_priority), 
-                                          (max(numeric_priority, na.rm = TRUE)+1), numeric_priority)) 
+                numeric_priority = as.numeric(numeric_priority), 
+                numeric_priority = ifelse(is.na(numeric_priority),
+                                          (max(numeric_priority, na.rm = TRUE)+1),
+                                          numeric_priority)) 
 
-if (subset_to_accepted_projects){
-special <- special %>% 
-  # dplyr::mutate(project_accepted_t_f = ifelse(is.na(project_accepted_t_f), TRUE, FALSE)) %>%
-  dplyr::filter(project_accepted_t_f == TRUE)
-}
+# if (subset_to_accepted_projects){
+# special <- special %>% 
+#   dplyr::mutate(!is.na(numeric_priority))
+#   # dplyr::mutate(project_accepted_t_f = ifelse(is.na(project_accepted_t_f), TRUE, FALSE)) %>%
+#   # dplyr::filter(project_accepted_t_f == TRUE)
+# }
 
 vess <- unique(special$vessel)[!grepl(pattern = ",", x = unique(special$vessel)) & 
                                (unique(special$vessel) != "[NONE]")]
@@ -106,6 +114,6 @@ comb <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", "
 for (i in 1:length(comb)) {
   special <- special %>% 
     dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb[i]))) 
-  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$survey == comb[i]])
+  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$srvy == comb[i]])
 }
 

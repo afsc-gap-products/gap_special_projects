@@ -53,9 +53,12 @@ edit_data <- function(data0) {
                                      x = affiliation,
                                      fixed = TRUE),
                   survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
-    tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
-                    sep = " ", remove = FALSE) %>% 
+    dplyr::rename(first_name = requester_s_first_name,
+                  last_name = requester_s_last_name) %>% 
+    # tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
+    #                 sep = " ", remove = FALSE) %>% 
     dplyr::mutate( # TOLEDO, need to double check!
+      requestor_name = paste0(first_name, " ", last_name), 
       target = dplyr::case_when(
         is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
           "No maximum or minimum quantity. ",
@@ -68,13 +71,13 @@ edit_data <- function(data0) {
         #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
         TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
       ), 
-      across(where(is.character), 
+      dplyr::across(where(is.character), 
              gsub, pattern = " , ", replace = ", "), 
-      across(where(is.character), 
+      dplyr::across(where(is.character), 
              gsub, pattern = " ; ", replace = "; "), 
-      across(where(is.character), 
+      dplyr::across(where(is.character), 
              gsub, pattern = "none", replace = "[None]"), 
-      across(where(is.character), 
+      dplyr::across(where(is.character), 
              ~tidyr::replace_na(data = ., replace = "[None]")))
   # dplyr::mutate(across(is.character(.), ~tidyr::replace_na(., "None. ")))
   
@@ -221,7 +224,7 @@ poster_special <- function(dat0,
   }
   
   dat0 <- dat0 %>% 
-    dplyr::mutate(numeric_priority = ifelse(grepl(pattern = "outreach", x = short_name, ignore.case = TRUE), 
+    dplyr::mutate(numeric_priority = ifelse(grepl(pattern = "outreach", x = short_title, ignore.case = TRUE), 
                                             (max(numeric_priority, na.rm = TRUE)+1), 
                                             numeric_priority), 
                   numeric_priority = ifelse(is.na(numeric_priority), 
@@ -257,13 +260,13 @@ poster_special <- function(dat0,
                                  paste0(' %>%
     flextable::compose(j = "dummy',cc,'",
                        value = as_paragraph(
-                          flextable::as_chunk(paste0((short_name',cc,')), 
+                          flextable::as_chunk(paste0((short_title',cc,')), 
                                   props = fp_text_default(color = "#006699", # "white", 
                                                           bold = TRUE, 
                                                           # shading.color	= "#006699",
                                                           font.size = ',subheader_size+2,')), 
                           "\n",
-                          flextable::as_chunk(toupper(paste0(pi',cc,', "\n")), 
+                          flextable::as_chunk(toupper(paste0(requestor_name',cc,', "\n")), 
                                   props = fp_text_default(color = "black",
                                                           bold = TRUE, 
                                                           font.size = ',subheader_size,')),

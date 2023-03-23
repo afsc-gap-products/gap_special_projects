@@ -13,7 +13,7 @@
 
 # *** REPORT KNOWNS ------------------------------------------------------------
 
-maxyr <- 2022
+maxyr <- 2023
 dir_out <- paste0("./output/", Sys.Date(),"/")
 dir.create(dir_out, showWarnings = F)
 
@@ -22,17 +22,15 @@ subset_to_accepted_projects <- TRUE
 access_to_internet <- TRUE
 googledrive::drive_auth()
 1
-dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing"
 
-# 2022 CORE COLLECTIONS REQUESTS:  Otoliths, Crab, Food Habits
-# dir_gcore <- "1W8bKigNipl5IdQIQH5Kyq4twJxZKLi1zeS9UNE_JAsU" # https://docs.google.com/spreadsheets/d/1W8bKigNipl5IdQIQH5Kyq4twJxZKLi1zeS9UNE_JAsU/edit?usp=sharing
-
+# dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" # 2022
+dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE"
 dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2VR1uecOcaLOmztK9Zs/edit?usp=sharing"
 
 # *** SOURCE SUPPORT SCRIPTS ---------------------------------------------------
 
 source('./code/functions.R')
-# source('./code/ex.R')
+# source('./code/ex.R') # for README
 source('./code/data.R')
 
 
@@ -43,7 +41,7 @@ for (i in 1:nrow(special)) {
   dat <- special[i,]
   
   file_name <- paste0(maxyr, "-", dat$last_name, "-", 
-                      janitor::make_clean_names(dat$title), ".docx")
+                      janitor::make_clean_names(dat$short_title), ".docx")
   
   rmarkdown::render(paste0("./code/template.Rmd"),
                     output_dir = dir_out,
@@ -71,12 +69,12 @@ file.remove(a)
 
 # Special projects posters by vessel and survey --------------------------------
 
-comb <- data.frame(srvy = c("srvy_AI", "srvy_AI", 
+comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
                             "srvy_EBS", "srvy_EBS", 
                             "srvy_NBS", "srvy_NBS"), 
-                   vess = c("vess_ocean_explorer", "vess_ak_provider", 
-                            "vess_ak_knight", "vess_vesteraalen", 
-                            "vess_ak_knight", "vess_vesteraalen"), 
+                   vess = c("vess_oex", "vess_akp", 
+                            "vess_akk", "vess_nwe", 
+                            "vess_akk", "vess_nwe"), 
                    sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
 
 path0 <-paste0(dir_out, "posters_special/")
@@ -88,8 +86,7 @@ for (i in 1:nrow(comb)) {
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE & 
                      special$sap_gap == comb$sap_gap[i]), ] %>% 
-    dplyr::select(short_name, pi, preserve, short_procedures, numeric_priority) %>% 
-    dplyr::mutate(numeric_priority = ifelse(short_name == "Herring Collection", 6, numeric_priority)) # TOLEDO! Delete for 2023
+    dplyr::select(short_title, requestor_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     

@@ -1,5 +1,5 @@
 ---
-title: "`r dat$title`"
+title: "`r paste0(dat$long_title, '\n\n*(', dat$short_title, ')*')`"
 author: 
 - affiliation: "`r dat$affiliation`"
   email: "`r dat$email_address`"
@@ -15,7 +15,6 @@ output:
 knitr::opts_chunk$set(echo = F)
 ```
 
-
 ### **Requester:** `r dat$requester_name` (`r dat$email_address`; `r dat$x24_7_contact_phone_number `)
 
 ### **Affiliation:** `r dat$affiliation`
@@ -24,11 +23,11 @@ knitr::opts_chunk$set(echo = F)
 
 **`r maxyr` GF `r dat$survey `**
 
-   - *Is this a new or a repeat collection?:* `r dat$new_or_repeat_collection `
-   - *Collection type:* `r dat$collection_type `       
-   - *Project Funding Source:* `r dat$funding `
-   - *Is this project funding extra sea days?* `r dat$extra_sea_days `
-   - *Is this project funding fuel costs?* `r dat$fuel_costs `
+ - *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
+ - *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
+ - *Project Funding Source:* `r dat$funding `
+ - *Is this project funding extra sea days?* `r dat$extra_sea_days `
+ - *Is this project funding fuel costs?* `r dat$fuel_costs `
 
 **Project Description and Justification:** `r dat$goals_and_justification`
 
@@ -37,11 +36,13 @@ knitr::opts_chunk$set(echo = F)
 
 ## Detailed Collection Procedures
 
-**Detailed Collection Procedures:** `r dat$detailed_collection_procedures`
+**Detailed Collection Procedures:** `r dat$detailed_collection_protocols`
 
-**Subsample Selectively:** `r dat$criteria_for_selecting_specimens` 
+**Sampling design:** `r dat$sampling_design`
 
-**Estimated time:** `r dat$estimated_time`
+**Estimated time:** `r ifelse(is.na(dat$estimated_time), "[None]", paste0(dat$estimated_time, " minutes per haul"))`
+
+**Estimated number of hauls to sample: ** `r ifelse(is.na(dat$estimated_hauls), "[None]", dat$estimated_hauls)`
 
 ## Biological Collection Details
 
@@ -61,13 +62,13 @@ knitr::opts_chunk$set(echo = F)
 
 **What is the sampling protocol:** `r dat$sampling_design`
 
-**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$criteria_for_selecting_specimens`
+**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$provide_the_criteria_for_selecting_your_specimens`
 
 ## Geographic Region of Collection
 
 **Survey:** `r dat$survey`
 
-**Place keywords:** `r dat$place_keywords`
+**Region:** `r dat$region`
 
 **Bounding coordinates**
 
@@ -83,10 +84,10 @@ knitr::opts_chunk$set(echo = F)
 
 **Project Chemicals:**  
 
-   - *Formaldehyde solutions:* `r dat$project_chemicals_formaldehyde `
-   - *Ethanol solutions:* `r dat$project_chemicals_ethanol `
-   - *glycerol/thymol:* `r dat$project_chemicals_glycerol_thymol `
-   - *DNA buffer (DMSO/EDTA/NaCl):* `r dat$project_chemicals_dna_buffer_dmso_edta_na_cl `
+   - *Formaldehyde solutions:* `r dat$afsc_provided_chemicals_formaldehyde `
+   - *Ethanol solutions:* `r dat$afsc_provided_chemicals_ethanol `
+   - *glycerol/thymol:* `r dat$afsc_provided_chemicals_glycerol_thymol `
+   - *DNA buffer (DMSO/EDTA/NaCl):* `r dat$afsc_provided_chemicals_dna_buffer_dmso_edta_na_cl `
 
 **Project Supplies:** 
 
