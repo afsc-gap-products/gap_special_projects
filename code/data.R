@@ -44,9 +44,43 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
 
 # Wrangle special project data -------------------------------------------------
 
-special <- edit_data(
-  data0 = special0 %>% 
-    dplyr::filter(!is.na(email_address))) %>% 
+special <- special0 %>% 
+    dplyr::filter(!is.na(email_address)) %>% 
+  dplyr::mutate(affiliation = gsub(pattern = " - ",
+                                   replacement = "-",
+                                   x = as.character(affiliation),
+                                   fixed = TRUE),
+                affiliation = gsub(pattern = "-",
+                                   replacement = " - ",
+                                   x = affiliation,
+                                   fixed = TRUE),
+                survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
+  dplyr::rename(first_name = requester_s_first_name,
+                last_name = requester_s_last_name) %>% 
+  # tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
+  #                 sep = " ", remove = FALSE) %>% 
+  dplyr::mutate( # TOLEDO, need to double check!
+    requestor_name = paste0(first_name, " ", last_name), 
+    target = dplyr::case_when(
+      is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
+        "No maximum or minimum quantity. ",
+      is.na(minimum_number_of_specimens) & !is.na(maximum_number_of_specimens) ~ 
+        paste0("Maximum specimen quantity: ", maximum_number_of_specimens), 
+      is.na(maximum_number_of_specimens) & !is.na(minimum_number_of_specimens) ~ 
+        paste0("Minimum specimen quantity: ", minimum_number_of_specimens), 
+      # is.character(minimum_number_of_specimens) ~ minimum_number_of_specimens, 
+      # is.numeric(minimum_number_of_specimens) & is.numeric(maximum_number_of_specimens) ~ 
+      #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
+      TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
+    ), 
+    dplyr::across(where(is.character), 
+                  gsub, pattern = " , ", replace = ", "), 
+    dplyr::across(where(is.character), 
+                  gsub, pattern = " ; ", replace = "; "), 
+    dplyr::across(where(is.character), 
+                  gsub, pattern = "none", replace = "[None]"), 
+    dplyr::across(where(is.character), 
+                  ~tidyr::replace_na(data = ., replace = "[None]"))) %>%
   dplyr::rename(numeric_priority = order_of_importance, 
                 short_procedures = short_on_deck_collection_instructions_675_character_limit) %>% 
   dplyr::mutate(vessel = toupper(vessel), 

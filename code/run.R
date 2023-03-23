@@ -17,16 +17,12 @@
 # *** REPORT KNOWNS ------------------------------------------------------------
 
 maxyr <- 2023
-dir_out <- paste0("./output/", Sys.Date(),"/")
-dir.create(dir_out, showWarnings = F)
-
 subset_to_accepted_projects <- TRUE
-
 access_to_internet <- TRUE
 
 # dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" # 2022
-dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE"
-dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2VR1uecOcaLOmztK9Zs/edit?usp=sharing"
+dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" # 2023
+dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2VR1uecOcaLOmztK9Zs/edit?usp=sharing" # all years
 
 # *** SOURCE SUPPORT SCRIPTS ---------------------------------------------------
 

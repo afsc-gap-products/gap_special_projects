@@ -1,6 +1,7 @@
 
 
-# INSTALL PACKAGES -------------------------------------
+# INSTALL PACKAGES -------------------------------------------------------------
+
 # Here we list all the packages we will need for this whole process
 # We'll also use this in our works cited page!!!
 PKG <- c(
@@ -12,11 +13,7 @@ PKG <- c(
   "readr",
   "janitor", 
   "googledrive", 
-  # "ggplot2", 
-  # "cowplot", 
-  # "magick",
-  # "webshot2", 
-  # "webshot",
+  "here", 
   
   "xlsx", 
   "readr",
@@ -25,12 +22,9 @@ PKG <- c(
   "gridExtra", 
   
   "flextable", 
-  # "bookdown", 
-  # "posterdown", # remotes::install_github("brentthorne/posterdown")
   
   # Text Management
   "stringr")
-
 
 PKG <- unique(PKG)
 for (p in PKG) {
@@ -40,52 +34,12 @@ for (p in PKG) {
 }
 
 
+# Directory set up -----------------------------------------
+
+dir_out <- paste0("./output/", Sys.Date(),"/")
+dir.create(dir_out, showWarnings = F)
+
 # Other user functions -------------------------------------
-
-edit_data <- function(data0) {
-  data1 <- data0 %>%
-    dplyr::mutate(affiliation = gsub(pattern = " - ",
-                                     replacement = "-",
-                                     x = as.character(affiliation),
-                                     fixed = TRUE),
-                  affiliation = gsub(pattern = "-",
-                                     replacement = " - ",
-                                     x = affiliation,
-                                     fixed = TRUE),
-                  survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
-    dplyr::rename(first_name = requester_s_first_name,
-                  last_name = requester_s_last_name) %>% 
-    # tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
-    #                 sep = " ", remove = FALSE) %>% 
-    dplyr::mutate( # TOLEDO, need to double check!
-      requestor_name = paste0(first_name, " ", last_name), 
-      target = dplyr::case_when(
-        is.na(minimum_number_of_specimens) & is.na(maximum_number_of_specimens) ~
-          "No maximum or minimum quantity. ",
-        is.na(minimum_number_of_specimens) & !is.na(maximum_number_of_specimens) ~ 
-          paste0("Maximum specimen quantity: ", maximum_number_of_specimens), 
-        is.na(maximum_number_of_specimens) & !is.na(minimum_number_of_specimens) ~ 
-          paste0("Minimum specimen quantity: ", minimum_number_of_specimens), 
-        # is.character(minimum_number_of_specimens) ~ minimum_number_of_specimens, 
-        # is.numeric(minimum_number_of_specimens) & is.numeric(maximum_number_of_specimens) ~ 
-        #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
-        TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
-      ), 
-      dplyr::across(where(is.character), 
-             gsub, pattern = " , ", replace = ", "), 
-      dplyr::across(where(is.character), 
-             gsub, pattern = " ; ", replace = "; "), 
-      dplyr::across(where(is.character), 
-             gsub, pattern = "none", replace = "[None]"), 
-      dplyr::across(where(is.character), 
-             ~tidyr::replace_na(data = ., replace = "[None]")))
-  # dplyr::mutate(across(is.character(.), ~tidyr::replace_na(., "None. ")))
-  
-  return(data1)
-  
-}
-
-
 
 #' @importFrom officer fp_border fp_par
 #' @export
