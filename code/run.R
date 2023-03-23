@@ -8,6 +8,9 @@
 
 # START ------------------------------------------------------------------------
 
+# Google drive folder for this project
+# https://drive.google.com/drive/folders/1wNkH1gSOeiCSSwWOIObvqSnxjAWEF1DY?usp=share_link
+
 # source("./code/run.R")
 # 1
 
