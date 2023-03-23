@@ -23,8 +23,6 @@ dir.create(dir_out, showWarnings = F)
 subset_to_accepted_projects <- TRUE
 
 access_to_internet <- TRUE
-googledrive::drive_auth()
-1
 
 # dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" # 2022
 dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE"
@@ -33,6 +31,8 @@ dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2V
 # *** SOURCE SUPPORT SCRIPTS ---------------------------------------------------
 
 source('./code/functions.R')
+googledrive::drive_auth()
+1
 # source('./code/ex.R') # for README
 source('./code/data.R')
 
