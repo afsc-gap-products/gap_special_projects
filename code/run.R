@@ -6,15 +6,13 @@
 #' Notes: 
 #' -----------------------------------------------------------------------------
 
-# START ------------------------------------------------------------------------
+# REPORT KNOWNS ----------------------------------------------------------------
 
 # Google drive folder for this project
 # https://drive.google.com/drive/folders/1wNkH1gSOeiCSSwWOIObvqSnxjAWEF1DY?usp=share_link
 
 # source("./code/run.R")
 # 1
-
-# *** REPORT KNOWNS ------------------------------------------------------------
 
 maxyr <- 2023
 subset_to_accepted_projects <- TRUE
@@ -24,7 +22,7 @@ access_to_internet <- TRUE
 dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" # 2023
 dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2VR1uecOcaLOmztK9Zs/edit?usp=sharing" # all years
 
-# *** SOURCE SUPPORT SCRIPTS ---------------------------------------------------
+# SOURCE SUPPORT SCRIPTS -------------------------------------------------------
 
 source('./code/functions.R')
 googledrive::drive_auth()
@@ -32,8 +30,7 @@ googledrive::drive_auth()
 # source('./code/ex.R') # for README
 source('./code/data.R')
 
-
-# Run RMarkdowns to create word docs from google spreadsheet --------------------
+# Run RMarkdowns to create word docs from google spreadsheet -------------------
 
 for (i in 1:nrow(special)) {
   
