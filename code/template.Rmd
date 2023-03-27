@@ -24,7 +24,6 @@ knitr::opts_chunk$set(echo = F)
 **`r maxyr` GF `r dat$survey `**
 
  - *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
- - *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
  - *Project Funding Source:* `r dat$funding `
  - *Is this project funding extra sea days?* `r dat$extra_sea_days `
  - *Is this project funding fuel costs?* `r dat$fuel_costs `
