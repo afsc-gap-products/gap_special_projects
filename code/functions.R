@@ -14,6 +14,7 @@ PKG <- c(
   "janitor", 
   "googledrive", 
   "here", 
+  "officer", 
   
   "xlsx", 
   "readr",

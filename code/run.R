@@ -32,11 +32,38 @@ source('./code/data.R')
 
 # Run RMarkdowns to create word docs from google spreadsheet -------------------
 
+# project summary sheet
+srvy0 <- gsub(pattern = "srvy_", replacement = "", 
+              x = names(special)[grepl(x = names(special), pattern = "srvy_")])
+
+for (i in 1:length(srvy0)) {
+  srvy <- srvy0[i]
+  dir.create(paste0(dir_out, srvy), showWarnings = F)
+
+  filename0 <- paste0(maxyr, "-00-summarynodesc-", srvy, ".docx")
+  rmarkdown::render(paste0("./code/template_summary_nodesc.Rmd"),
+                    output_dir = dir_out,
+                    output_file = paste0(dir_out, filename0))
+  file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+            to = paste0(dir_out, srvy, "/", filename0), 
+            overwrite = TRUE)
+    
+  filename0 <- paste0(maxyr, "-00-summarydesc-", srvy, ".docx")
+  rmarkdown::render(paste0("./code/template_summary_desc.Rmd"),
+                    output_dir = dir_out,
+                    output_file = paste0(dir_out, filename0))
+  file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+            to = paste0(dir_out, srvy, "/", filename0), 
+            overwrite = TRUE)  
+}  
+
+# individual project description pages
 for (i in 1:nrow(special)) {
-  
+
   dat <- special[i,]
   
-  file_name <- paste0(maxyr, "-", dat$last_name, "-", 
+  file_name <- paste0(maxyr, "-", str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
+                      dat$last_name, "-", 
                       janitor::make_clean_names(dat$short_title), ".docx")
   
   rmarkdown::render(paste0("./code/template.Rmd"),
@@ -151,7 +178,7 @@ for (i in 1:nrow(comb)) {
                          pgwidth = 46,
                          font = "Arial",
                          title = title,
-                         spacing = 1.5,
+                         spacing = 1.25,
                          pad = 20,
                          fig_size = .5)
 

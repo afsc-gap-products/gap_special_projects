@@ -1,0 +1,76 @@
+---
+output: 
+  officedown::rdocx_document: 
+      reference_docx: styles_reference_land.docx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+# <!---BLOCK_LANDSCAPE_START--->
+# <!---BLOCK_LANDSCAPE_STOP--->
+```
+
+# `r paste0('**Special Projects for the ',maxyr,' ', srvy, ' Bottom Trawl Survey**') `
+
+```{r}
+
+pgwidth <- 9.5
+even_body = "#CFCFCF"
+odd_body = "#EFEFEF"
+
+ft <- special %>% 
+  dplyr::filter(grepl(x = survey, pattern = srvy, ignore.case = FALSE)) %>% 
+  dplyr::arrange(numeric_priority) %>% 
+  dplyr::select(last_name, short_title, preserve, short_procedures, vessel) %>% 
+  flextable::flextable() %>% 
+  flextable::set_header_labels(x = .,
+                               "last_name" = "Last name", 
+                               "short_title" = "Project Title", 
+                               "preserve" = "Preservation", 
+                               "short_procedures" = "Work Required", 
+                               "vessel" = "Vessel") %>% 
+  # table aesthetics
+  flextable::align_text_col(x = ., align = "left", header = TRUE) %>% 
+  flextable::align_nottext_col(x = ., align = "right", header = TRUE) %>% 
+  flextable::font(x = ., fontname = "Arial", part = "all") %>%
+  flextable::valign(x = ., valign = "top", part = "body") %>%
+  flextable::fontsize(x = ., size = 10, part = "body") %>%
+  flextable::bold(x = ., bold = TRUE, j = "short_title", part = "body") %>% 
+  
+  # header
+  flextable::merge_h(., part = "header") %>%
+  flextable::bold(x = ., bold = TRUE, part = "header") %>% 
+  flextable::fontsize(x = ., size = 10, part = "header") %>%
+  flextable::align(x = ., align = "center", part = "header") %>% 
+  flextable::color(x = ., color = "grey20") %>%
+  
+  # table sizing 
+  flextable::fit_to_width(x = .,
+                          max_width = pgwidth,
+                          unit = "in") %>%
+  flextable::width(x = .,
+                   width = c(pgwidth*.1, pgwidth*.15, pgwidth*.15, pgwidth*.5, pgwidth*.1),
+                   j = 1:5,
+                   unit = "in") %>%
+  
+  # Line borders
+  flextable::hline(x = ., 
+                   border = officer::fp_border(width = 0.5, color = "grey70"), 
+                   part = "body") %>% 
+  flextable::vline(x = ., 
+                   border = officer::fp_border(width = 0.5, color = "grey70"), 
+                   part = "all") 
+
+# alt colors of rows
+b_nrow <- flextable::nrow_part(ft, "body")
+even <- seq_len(b_nrow)%%2 == 0
+odd <- !even
+ft <- ft %>% 
+  flextable::bg(x = ., i = odd, 
+                bg = odd_body, part = "body") %>%
+  flextable::bg(x = ., i = even, 
+                bg = even_body, part = "body") 
+ft
+```
+
+

@@ -151,3 +151,5 @@ for (i in 1:length(comb)) {
   names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$srvy == comb[i]])
 }
 
+special <- special %>% 
+  dplyr::arrange(numeric_priority)
