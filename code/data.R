@@ -73,8 +73,8 @@ special <- special0 %>%
       #   paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens), 
       TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
     ), 
-    dplyr::across(where(is.character), 
-                  gsub, pattern = " , ", replace = ", "), 
+    dplyr::across(where(is.character),
+                  gsub, pattern = " , ", replace = ", "),
     dplyr::across(where(is.character), 
                   gsub, pattern = " ; ", replace = "; "), 
     dplyr::across(where(is.character), 

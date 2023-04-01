@@ -68,6 +68,9 @@ file.remove(a)
 comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
                             "srvy_EBS", "srvy_EBS", 
                             "srvy_NBS", "srvy_NBS"), 
+                   vessel = c("Ocean Explorer", "Alaska Provider", 
+                            "Alaska Knight", "Northwest Explorer", 
+                            "Alaska Knight", "Northwest Explorer"), 
                    vess = c("vess_oex", "vess_akp", 
                             "vess_akk", "vess_nwe", 
                             "vess_akk", "vess_nwe"), 
@@ -82,7 +85,7 @@ for (i in 1:nrow(comb)) {
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE & 
                      special$sap_gap == comb$sap_gap[i]), ] %>% 
-    dplyr::select(short_title, requestor_name, preserve, short_procedures, numeric_priority) 
+    dplyr::select(short_title, requestor_name, last_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     
@@ -93,10 +96,12 @@ for (i in 1:nrow(comb)) {
     title <- paste0(
       maxyr, " ",  
       gsub(pattern = "srvy_", replacement = "", x = comb$srvy[i]), 
-      " F/V ", 
-      gsub(pattern = "Ak", replacement = "AK", x = stringr::str_to_title(
-        gsub(pattern = "_", replacement = " ", 
-             gsub(pattern = "vess_", replacement = "", x = comb$vess[i])))), " ",
+      " F/V ", comb$vessel[i], 
+      # (toupper(
+      # # gsub(pattern = "Ak", replacement = "AK", x = stringr::str_to_title(
+      #   gsub(pattern = "_", replacement = " ", 
+      #        gsub(pattern = "vess_", replacement = "", x = comb$vess[i])))), 
+      " ",
       toupper(comb$sap_gap[i]), " ", #"\n",
       "Special Collections Tally Sheet")
     
@@ -123,47 +128,46 @@ for (i in 1:nrow(comb)) {
     adj0 <- ifelse(nrow(dat0)<=12 | 
                      (max(nchar(dat0$short_procedures)) < 360), 0, -2)
     
-    ft <- poster_special(dat0 = dat0,
-                         title = title,
-                         header_size = 12,
-                         subheader_size = 8+adj0,
-                         body_size = 7+adj0,
-                         pgwidth = 11.6,
-                         font = "Arial",
-                         spacing = 1.6,
-                         pad = 40, 
-                         fig_size = .1, 
-                         in_markdown = TRUE)
-    
-    rmarkdown::render(paste0("./code/template_pdf_landscape.Rmd"),
-                      output_dir = path0,
-                      output_file = paste0(file_name0,".pdf"))
+    # ft <- poster_special(dat0 = dat0,
+    #                      title = title,
+    #                      header_size = 12,
+    #                      subheader_size = 8+adj0,
+    #                      body_size = 7+adj0,
+    #                      pgwidth = 11.6,
+    #                      font = "Arial",
+    #                      spacing = 0.5,
+    #                      pad = 20,
+    #                      fig_size = .1)
+    # 
+    # rmarkdown::render(paste0("./code/template_pdf_landscape.Rmd"),
+    #                   output_dir = path0,
+    #                   output_file = paste0(file_name0,".pdf"))
     
     # PPTX
-    
-    # ft <- poster_special(dat0 = dat0,
-    #                      subheader_size = 36,
-    #                      header_size = 60,
-    #                      body_size = 28,
-    #                      pgwidth = 46,
-    #                      font = "Arial",
-    #                      title = title,
-    #                      spacing = 1.5,
-    #                      pad = 20, 
-    #                      fig_size = .5)
-    # 
-    # flextable::save_as_pptx(
-    #   " " = ft,
-    #   path = paste0(path0, file_name0,".pptx"))
-    # 
-    # rmarkdown::render(paste0("./code/template_pptx_landscape.Rmd"),
-    #                   output_dir = path0,
-    #                   output_file = paste0(file_name0,".pptx"))
+    ft <- poster_special(dat0 = dat0,
+                         subheader_size = 36,
+                         header_size = 60,
+                         body_size = 28,
+                         pgwidth = 46,
+                         font = "Arial",
+                         title = title,
+                         spacing = 1.5,
+                         pad = 20,
+                         fig_size = .5)
+
+    flextable::save_as_pptx(
+      " " = ft,
+      path = paste0(path0, file_name0,".pptx"))
+
+    # fix sizing of page
+    rmarkdown::render(paste0("./code/template_pptx_landscape.Rmd"),
+                      output_dir = path0,
+                      output_file = paste0(file_name0,".pptx"))
   }
 }
 
 
-# Otolith projects posters by survey -------------------------------------------
+ # Otolith projects posters by survey -------------------------------------------
 
 comb <- otoliths0 %>% # the different combination of posters we will need to make
   dplyr::select(survey) %>% 

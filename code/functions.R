@@ -143,8 +143,7 @@ poster_special <- function(dat0,
                            pgwidth = 48,
                            even_body = "#CFCFCF", 
                            odd_body = "#EFEFEF", 
-                           fig_size = .5, 
-                           in_markdown = TRUE){
+                           fig_size = .5){
   
   # Data restacking
 
@@ -217,10 +216,9 @@ poster_special <- function(dat0,
                           flextable::as_chunk(paste0((short_title',cc,')), 
                                   props = fp_text_default(color = "#006699", # "white", 
                                                           bold = TRUE, 
-                                                          # shading.color	= "#006699",
                                                           font.size = ',subheader_size+2,')), 
                           "\n",
-                          flextable::as_chunk(toupper(paste0(requestor_name',cc,', "\n")), 
+                          flextable::as_chunk(toupper(paste0(last_name',cc,', "\n")), 
                                   props = fp_text_default(color = "black",
                                                           bold = TRUE, 
                                                           font.size = ',subheader_size,')),
@@ -231,8 +229,8 @@ poster_special <- function(dat0,
                           "  ",                                 
                           flextable::as_image(src =
                                      ifelse(grepl(x = preserve',cc,', pattern = "freeze"),
-                                     "',ifelse(in_markdown, ".", ""),'./img/snowflake.png",
-                                     "',ifelse(in_markdown, ".", ""),'./img/blank.png"),
+                                     here::here("img", "snowflake.png"),
+                                     here::here("img", "blank.png")),
                                                    width = ',fig_size,', height = ',fig_size,'),  
                           "\n",
                           flextable::as_chunk((paste0(short_procedures',cc,', "\n")), 
@@ -241,11 +239,14 @@ poster_special <- function(dat0,
                                                           font.size = ',body_size,')) ))', 
                   collapse = ""), collapse = "") )) %>%
 
+  #   "',ifelse(in_markdown, ".", ""),'./img/snowflake.png",
+  # "',ifelse(in_markdown, ".", ""),'./img/blank.png"),
+    
     # table aesthetics
     flextable::align_text_col(x = ., align = "left", header = TRUE) %>% 
     flextable::align_nottext_col(x = ., align = "right", header = TRUE) %>% 
-    flextable::padding(x = ., padding = pad, part = "all") %>% 
-    flextable::line_spacing(x = ., space = spacing, part = "all") %>% 
+    flextable::padding(x = ., padding.left = pad, padding.right = pad, part = "body") %>%
+    flextable::line_spacing(x = ., space = spacing, part = "all") %>%
     flextable::font(x = ., fontname = font, part = "all") %>%
     flextable::valign(x = ., valign = "top", part = "body") %>%
   
@@ -269,14 +270,13 @@ poster_special <- function(dat0,
     flextable::width(x = .,
                      width = rep_len(x = pgwidth/nrow(comb1), length.out = nrow(comb1)),
                      j = 1:nrow(comb1),
-                     unit = "in") 
-  
+                     unit = "in") %>%
     
 # Line borders
-      ft <- flextable::hline(x = ft, 
+        flextable::hline(x = ., 
                              border = officer::fp_border(width = 0.5, color = "grey80"), 
-                             part = "body")
-      ft <- flextable::vline(x = ft, 
+                             part = "body") %>% 
+        flextable::vline(x = ., 
                              border = officer::fp_border(width = 0.5, color = "grey80"), 
                              part = "body")
     

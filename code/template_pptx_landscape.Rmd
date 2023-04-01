@@ -10,21 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 ```{r}
-# ft <- poster_special(dat0 = dat0,
-#                          subheader_size = 36,
-#                          header_size = 60,
-#                          body_size = 28,
-#                          pgwidth = 46,
-#                          font = "Arial",
-#                          title = title,
-#                          spacing = 1.2,
-#                          pad = 10)
-
 ft
-
-#![blh](../img/snowflake.png)
-# `r ft `
-
 ```
 
 
