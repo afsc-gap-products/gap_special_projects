@@ -224,90 +224,25 @@ for (i in 1:nrow(comb)) {
       gsub(pattern = "srvy_", replacement = "", x = comb$survey[i]), 
       " Survey Core Otolith Collections")
     
-    # PDF
-    
-    # ft <- poster_otolith(dat0 = dat0,
-    #                      title = title,
-    #                      header_size = 24,
-    #                      subheader_size = 18,
-    #                      body_size = 14,
-    #                      spacing = 1.2,
-    #                      pad = 1,
-    #                      pgwidth = 11.6,
-    #                      col_spacing = c(3,1.5,7.1))
-    
-    
     ft <- poster_otolith(dat0 = dat0,
                          title = title,
-                         header_size = 14,
-                         subheader_size = 12,
-                         body_size = 12,
-                         spacing = .9,
-                         pad = 1, # doesnt work, maybe next year https://ardata-fr.github.io/flextable-book/rendering.html#note_pdf
+                         header = 20,
+                         subheader_size = 20,
+                         body_size = 18,
+                         spacing = 10,
+                         pad = 40, 
                          pgwidth = 7.6,
-                         col_spacing = c(1.5,1.4,4.2)) # must sum to pgwidth
+                         col_spacing = c(1.6,1.5,4.3)) # must sum to pgwidth
 
     rmarkdown::render(paste0("./code/template_pdf_portrait.Rmd"),
                       output_dir = path0,
                       output_file = paste0(file_name0,".pdf"))
     
-    
-    
-    # ft <- poster_otolith(dat0 = dat0,
-    #                      title = title,
-    #                      header_size = 22,
-    #                      subheader_size = 20,
-    #                      body_size = 18,
-    #                      spacing = 1.2,
-    #                      pad = 10,
-    #                      pgwidth = 7.6,
-    #                      col_spacing = c(1.5,1.2,4.6))
+    # flextable::save_as_pptx(
+    #   " " = ft,
+    #   path = paste0(path0, file_name0,".pptx"))
     # 
-    # flextable::save_as_image(x = ft,
-    #                          path = paste0(path0, file_name0,"_1.pdf"), 
-    #                          zoom = 1,expand = 1, webshot = "webshot")
-    
-    # flextable_to_rmd(x = ft, )
-    
-    # ft <- poster_otolith(dat0 = dat0,
-    #                      title = title,
-    #                      header_size = 28, 
-    #                      body_size = 26,
-    #                      spacing = 1.2,
-    #                      pad = 10, 
-    #                      pgwidth = 7.8, 
-    #                      col_spacing = c(1.8,1,5)) # c(1.8,1,5)
-    # 
-    # 
-    # flextable::save_as_image(x =ft,
-    #                          path = paste0(path0, file_name0,".pdf"))
-    
-    # flextable::save_as_image(x = poster_otolith(dat0 = dat0,
-    #                                             textsize = 35,
-    #                                             title = title,
-    #                                             spacing = 1.2,
-    #                                             pad = 10),
-    #                          path = paste0(path0, file_name0,".pdf"),
-    #                          zoom = 1, expand = 1)
-    
-    # PDF
-    # ft <- poster_otolith(dat0 = dat0, 
-    #            textsize = 10,
-    #            pad = 5,
-    #            spacing = 1.4,
-    #            title = title)
-    # 
-    # rmarkdown::render(paste0("./code/template_pdf.Rmd"),
-    #                   output_dir = path0,
-    #                   output_file = paste0(file_name0,".pdf"))
-    
-    # PPTX
-    # ft <- poster_otolith(dat0 = dat0, 
-    #                      textsize = 40,
-    #                      pad = 10,
-    #                      spacing = 1.2,
-    #                      title = title)
-    # 
+    # # fix sizing of page
     # rmarkdown::render(paste0("./code/template_pptx.Rmd"),
     #                   output_dir = path0,
     #                   output_file = paste0(file_name0,".pptx"))

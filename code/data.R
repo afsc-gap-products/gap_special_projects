@@ -25,7 +25,9 @@ all_na <- function(x) any(!is.na(x))
 
 special0 <- xlsx::read.xlsx(file = paste0(here::here("data", "special.xlsx")), 
                             sheetName = "Copy of ALL SURVEYS") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  dplyr::filter(!is.na(timestamp) & 
+                  is.na(crab_project))
 
 stomachs0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
                             sheetName = "Stomachs", startRow = 2) %>% 
