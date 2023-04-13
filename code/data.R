@@ -132,11 +132,11 @@ special <- special %>%
                sep = " or ") %>% 
   dplyr::mutate(preserve = ifelse(is.na(preserve), "", preserve))
 
-# comb <- unique(strsplit(x = paste(special$vessel, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
-# for (i in 1:length(comb)) {
+# comb0 <- unique(strsplit(x = paste(special$vessel, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
+# for (i in 1:length(comb0)) {
 #   special <- special %>% 
-#     dplyr::mutate(temp = unlist(lapply(X = vessel, grepl, pattern = comb[i]))) 
-#   names(special)[names(special) == "temp"] <- paste0("vess_", comb[i])
+#     dplyr::mutate(temp = unlist(lapply(X = vessel, grepl, pattern = comb0[i]))) 
+#   names(special)[names(special) == "temp"] <- paste0("vess_", comb0[i])
 # }
 
 s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"), 
@@ -146,11 +146,11 @@ s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"),
                            "Aleutian Islands", 
                            "Bering Sea Slope") )
 
-comb <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
-for (i in 1:length(comb)) {
+comb0 <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
+for (i in 1:length(comb0)) {
   special <- special %>% 
-    dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb[i]))) 
-  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$srvy == comb[i]])
+    dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb0[i]))) 
+  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$srvy == comb0[i]])
 }
 
 special <- special %>% 

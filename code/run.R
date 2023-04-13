@@ -6,13 +6,14 @@
 #' Notes: 
 #' -----------------------------------------------------------------------------
 
-# REPORT KNOWNS ----------------------------------------------------------------
-
 # Google drive folder for this project
 # https://drive.google.com/drive/folders/1wNkH1gSOeiCSSwWOIObvqSnxjAWEF1DY?usp=share_link
 
 # source("./code/run.R")
 # 1
+
+
+# REPORT KNOWNS ----------------------------------------------------------------
 
 maxyr <- 2023
 comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
@@ -26,9 +27,7 @@ comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA",
                             "vess_akk", "vess_nwe"), 
                    sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
 
-
-subset_to_accepted_projects <- TRUE
-access_to_internet <- TRUE
+# GOOGLE SPREADSHEET LINKS -----------------------------------------------------
 
 # dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" # 2022
 dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" # 2023
@@ -36,22 +35,29 @@ dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2V
 
 # SOURCE SUPPORT SCRIPTS -------------------------------------------------------
 
+subset_to_accepted_projects <- TRUE
+access_to_internet <- TRUE
 source('./code/functions.R')
 googledrive::drive_auth()
 1
 # source('./code/ex.R') # for README
 source('./code/data.R')
 
+# GOOGLE SPREADSHEET LINKS -----------------------------------------------------
+
 # Run RMarkdowns to create word docs from google spreadsheet -------------------
 
-# project summary sheet
-srvy0 <- gsub(pattern = "srvy_", replacement = "", 
-              x = names(special)[grepl(x = names(special), pattern = "srvy_")])
+srvy0 <- unique(gsub(pattern = "srvy_", replacement = "", x = comb$srvy))
 
 for (i in 1:length(srvy0)) {
+  
   srvy <- srvy0[i]
+  vess <- unique(comb$vess[comb$srvy == paste0("srvy_", srvy)])
+  vess_not <- unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
+  
   dir.create(paste0(dir_out, srvy), showWarnings = F)
 
+  # project summary sheet without description
   filename0 <- paste0(maxyr, "-00-summarynodesc-", srvy, ".docx")
   rmarkdown::render(paste0("./code/template_summary_nodesc.Rmd"),
                     output_dir = dir_out,
@@ -60,6 +66,7 @@ for (i in 1:length(srvy0)) {
             to = paste0(dir_out, srvy, "/", filename0), 
             overwrite = TRUE)
     
+  # project summary sheet with description
   filename0 <- paste0(maxyr, "-00-summarydesc-", srvy, ".docx")
   rmarkdown::render(paste0("./code/template_summary_desc.Rmd"),
                     output_dir = dir_out,
@@ -129,7 +136,6 @@ for (i in 1:nrow(comb)) {
       toupper(comb$sap_gap[i]), " ", 
       "Special Collections Tally Sheet")
     
-    # PPTX
     ft <- poster_special(dat0 = dat0,
                          subheader_size = 36,
                          header_size = 60,
@@ -145,8 +151,8 @@ for (i in 1:nrow(comb)) {
       " " = ft,
       path = paste0(path0, file_name0,".pptx"))
 
-    # fix sizing of page
-    rmarkdown::render(paste0("./code/template_pptx_landscape.Rmd"),
+
+    rmarkdown::render(paste0("./code/template_pptx_landscape.Rmd"), # fix sizing of page
                       output_dir = path0,
                       output_file = paste0(file_name0,".pptx"))
   }
@@ -166,16 +172,14 @@ for (i in 1:nrow(comb)) {
   
   file_name0 <- comb$survey[i]
   
-  # subset the data
-  dat0 <- otoliths0 %>% 
+  dat0 <- otoliths0 %>% # subset the data
     dplyr::filter(survey == comb$survey[i] &
                     plan != "no collection this year") %>%
     dplyr::arrange(plan) %>% 
     dplyr::select(plan, species, species, n_per_haul, criteria) %>% 
     dplyr::mutate(plan = toupper(plan))
   
-
-  if (nrow(dat0) != 0) {
+  if (nrow(dat0) != 0) {  # if there is data, run scripts
     
     title <- paste0(
       maxyr, " ",  
@@ -191,10 +195,6 @@ for (i in 1:nrow(comb)) {
                          pad = 10, 
                          pgwidth = 34,
                          col_spacing = c(0.3,0.2,0.4)) 
-
-    # rmarkdown::render(paste0("./code/template_pdf_portrait.Rmd"),
-    #                   output_dir = path0,
-    #                   output_file = paste0(file_name0,".pdf"))
     
     flextable::save_as_pptx(
       " " = ft,
