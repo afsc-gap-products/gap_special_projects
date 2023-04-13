@@ -15,6 +15,18 @@
 # 1
 
 maxyr <- 2023
+comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
+                            "srvy_EBS", "srvy_EBS", 
+                            "srvy_NBS", "srvy_NBS"), 
+                   vessel = c("Ocean Explorer", "Alaska Provider", 
+                              "Alaska Knight", "Northwest Explorer", 
+                              "Alaska Knight", "Northwest Explorer"), 
+                   vess = c("vess_oex", "vess_akp", 
+                            "vess_akk", "vess_nwe", 
+                            "vess_akk", "vess_nwe"), 
+                   sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
+
+
 subset_to_accepted_projects <- TRUE
 access_to_internet <- TRUE
 
@@ -92,17 +104,6 @@ file.remove(a)
 
 # Special projects posters by vessel and survey --------------------------------
 
-comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
-                            "srvy_EBS", "srvy_EBS", 
-                            "srvy_NBS", "srvy_NBS"), 
-                   vessel = c("Ocean Explorer", "Alaska Provider", 
-                            "Alaska Knight", "Northwest Explorer", 
-                            "Alaska Knight", "Northwest Explorer"), 
-                   vess = c("vess_oex", "vess_akp", 
-                            "vess_akk", "vess_nwe", 
-                            "vess_akk", "vess_nwe"), 
-                   sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
-
 path0 <-paste0(dir_out, "posters_special/")
 dir.create(path = path0)
 
@@ -124,51 +125,9 @@ for (i in 1:nrow(comb)) {
       maxyr, " ",  
       gsub(pattern = "srvy_", replacement = "", x = comb$srvy[i]), 
       " F/V ", comb$vessel[i], 
-      # (toupper(
-      # # gsub(pattern = "Ak", replacement = "AK", x = stringr::str_to_title(
-      #   gsub(pattern = "_", replacement = " ", 
-      #        gsub(pattern = "vess_", replacement = "", x = comb$vess[i])))), 
       " ",
-      toupper(comb$sap_gap[i]), " ", #"\n",
+      toupper(comb$sap_gap[i]), " ", 
       "Special Collections Tally Sheet")
-    
-    # PDF
-    
-    # ft <- poster_special(dat0 = dat0,
-    #                      header_size = 14,
-    #                      subheader_size = 10,
-    #                      body_size = 8,
-    #                      pgwidth = 11,
-    #                      font = "Arial",
-    #                      title = title,
-    #                      spacing = 1.1,
-    #                      pad = 40, 
-    #                      fig_size = .2, 
-    #                      in_markdown = FALSE)
-    # 
-    # flextable::save_as_image(x = ft,
-    #                          path = paste0(path0, file_name0,".pdf"),
-    #                          webshot = "webshot", zoom = 1)
-    
-    
-    # might not be the best rule, but we will see
-    adj0 <- ifelse(nrow(dat0)<=12 | 
-                     (max(nchar(dat0$short_procedures)) < 360), 0, -2)
-    
-    # ft <- poster_special(dat0 = dat0,
-    #                      title = title,
-    #                      header_size = 12,
-    #                      subheader_size = 8+adj0,
-    #                      body_size = 7+adj0,
-    #                      pgwidth = 11.6,
-    #                      font = "Arial",
-    #                      spacing = 0.5,
-    #                      pad = 20,
-    #                      fig_size = .1)
-    # 
-    # rmarkdown::render(paste0("./code/template_pdf_landscape.Rmd"),
-    #                   output_dir = path0,
-    #                   output_file = paste0(file_name0,".pdf"))
     
     # PPTX
     ft <- poster_special(dat0 = dat0,
@@ -215,8 +174,7 @@ for (i in 1:nrow(comb)) {
     dplyr::select(plan, species, species, n_per_haul, criteria) %>% 
     dplyr::mutate(plan = toupper(plan))
   
-  # dat0$plan <- gsub(pattern = "random/haul", replacement = "random/\nhaul", x = dat0$plan)
-  
+
   if (nrow(dat0) != 0) {
     
     title <- paste0(
@@ -226,26 +184,26 @@ for (i in 1:nrow(comb)) {
     
     ft <- poster_otolith(dat0 = dat0,
                          title = title,
-                         header = 20,
-                         subheader_size = 20,
-                         body_size = 18,
-                         spacing = 10,
-                         pad = 40, 
-                         pgwidth = 7.6,
-                         col_spacing = c(1.6,1.5,4.3)) # must sum to pgwidth
+                         header = 80,
+                         subheader_size = 80,
+                         body_size = 72,
+                         spacing = 1.2,
+                         pad = 10, 
+                         pgwidth = 34,
+                         col_spacing = c(0.3,0.2,0.4)) 
 
-    rmarkdown::render(paste0("./code/template_pdf_portrait.Rmd"),
-                      output_dir = path0,
-                      output_file = paste0(file_name0,".pdf"))
-    
-    # flextable::save_as_pptx(
-    #   " " = ft,
-    #   path = paste0(path0, file_name0,".pptx"))
-    # 
-    # # fix sizing of page
-    # rmarkdown::render(paste0("./code/template_pptx.Rmd"),
+    # rmarkdown::render(paste0("./code/template_pdf_portrait.Rmd"),
     #                   output_dir = path0,
-    #                   output_file = paste0(file_name0,".pptx"))
+    #                   output_file = paste0(file_name0,".pdf"))
+    
+    flextable::save_as_pptx(
+      " " = ft,
+      path = paste0(path0, file_name0,".pptx"))
+
+    # fix sizing of page
+    rmarkdown::render(paste0("./code/template_pptx.Rmd"),
+                      output_dir = path0,
+                      output_file = paste0(file_name0,".pptx"))
     
   }
 }

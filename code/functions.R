@@ -304,14 +304,16 @@ poster_special <- function(dat0,
 
 
 poster_otolith <- function(dat0, 
-                           header_size = 30,
-                           subheader_size = 28,
-                           body_size = 16, 
+                           header_size = 40,
+                           subheader_size = 40,
+                           body_size = 30, 
                            pad = 5,
                            spacing = 1.2, 
                            title = "", 
-                           pgwidth = 7.6, 
-                           col_spacing = c(2,1,5)){
+                           pgwidth = 36, 
+                           col_spacing = c(0.4,0.4,0.2)){
+  
+  col_spacing <- (col_spacing)/sum(col_spacing)
   
   dat000 <- dat0 %>% 
     dplyr::arrange(plan, species, n_per_haul) 
@@ -367,7 +369,7 @@ poster_otolith <- function(dat0,
     flextable::line_spacing(x = ., space = spacing, part = "all") %>%
     flextable::padding(x = ., padding = pad, part = "all") %>%
     flextable::padding(x = ., j = "species", padding.left = 10, padding.right = 10) %>%
-    flextable::width(x = ., width = col_spacing, unit = "in") %>% # width = c(6,4,10)
+    flextable::width(x = ., width = pgwidth*col_spacing, unit = "in") %>% # width = c(6,4,10)
     flextable::fit_to_width(x = .,
                             max_width = pgwidth,
                             unit = "in") 
