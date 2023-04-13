@@ -118,8 +118,9 @@ for (i in 1:nrow(comb)) {
   
   # subset the data
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
-                     special[,comb$vess[i]] == TRUE & 
-                     special$sap_gap == comb$sap_gap[i]), ] %>% 
+                     special[,comb$vess[i]] == TRUE # & 
+                   #   special$sap_gap == comb$sap_gap[i]
+                   ), ] %>% 
     dplyr::select(short_title, requestor_name, last_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
