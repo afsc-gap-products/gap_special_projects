@@ -351,7 +351,7 @@ poster_otolith <- function(dat0,
     flextable::set_header_labels(x = .,
                                  "species" = "Species", 
                                  "n_per_haul" = "Target #/Plan", 
-                                 "criteria" = "Rules") %>% 
+                                 "criteria" = "Collection Rules") %>% 
     flextable::fontsize(x = ., i = 2, size = subheader_size, part = "header") %>% 
     flextable::bg(x = ., j = 1, i = ~ !is.na(`Sampling plan`), 
                   bg = "darkolivegreen3", part = "body")  %>% # blanchedalmond
