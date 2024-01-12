@@ -1,49 +1,61 @@
 #' -----------------------------------------------------------------------------
 #' title: Create special project sheets
-#' author: L Dawson (Liz.Dawson AT noaa.gov) and EH Markowitz (emily.markowitz AT noaa.gov)
-#' start date: 2022-02-16
-#' last modified: 2022-03-01
+#' author: A Dowlin (alexandra.dowlin AT noaa.gov) and EH Markowitz (emily.markowitz AT noaa.gov)
+#' start date: 202-02-16
+#' last modified: 2024-01-12
 #' Notes: 
 #' -----------------------------------------------------------------------------
 
-# Google drive folder for this project
-# https://drive.google.com/drive/folders/1wNkH1gSOeiCSSwWOIObvqSnxjAWEF1DY?usp=share_link
-
+# run reports with one click
 # source("./code/run.R")
 # 1
 
-
 # REPORT KNOWNS ----------------------------------------------------------------
 
-maxyr <- 2023
-comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
-                            "srvy_EBS", "srvy_EBS", 
-                            "srvy_NBS", "srvy_NBS"), 
+# maxyr <- 2023
+# comb <- data.frame(srvy = c("srvy_GOA", "srvy_GOA", 
+#                             "srvy_EBS", "srvy_EBS", 
+#                             "srvy_NBS", "srvy_NBS"), 
+#                    vessel = c("Ocean Explorer", "Alaska Provider", 
+#                               "Alaska Knight", "Northwest Explorer", 
+#                               "Alaska Knight", "Northwest Explorer"), 
+#                    vess = c("vess_oex", "vess_akp", 
+#                             "vess_akk", "vess_nwe", 
+#                             "vess_akk", "vess_nwe"), 
+#                    sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
+
+maxyr <- 2024
+comb <- data.frame(srvy = c("srvy_AI", "srvy_AI", 
+                            "srvy_EBS", "srvy_EBS"), 
                    vessel = c("Ocean Explorer", "Alaska Provider", 
-                              "Alaska Knight", "Northwest Explorer", 
                               "Alaska Knight", "Northwest Explorer"), 
                    vess = c("vess_oex", "vess_akp", 
-                            "vess_akk", "vess_nwe", 
                             "vess_akk", "vess_nwe"), 
-                   sap_gap = c("gap", "gap", "gap", "gap", "gap", "gap")) # possibility for SAP, too
+                   sap_gap = c("gap", "gap", "gap", "gap")) 
 
 # GOOGLE SPREADSHEET LINKS -----------------------------------------------------
 
-# dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" # 2022
-dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" # 2023
+# Google drive folder for this project: https://drive.google.com/drive/folders/1wNkH1gSOeiCSSwWOIObvqSnxjAWEF1DY?usp=share_link
 dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2VR1uecOcaLOmztK9Zs/edit?usp=sharing" # all years
+
+# 2022: 
+# dir_gspecial <- "https://docs.google.com/spreadsheets/d/1svA3mD8nV3nRnkmIF8MZqeIC4tLpjn1ltTBVjvYoB1k/edit?usp=sharing" 
+
+# 2023: 
+# dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" 
+
+# 2024: 
+dir_gspecial <- "https://docs.google.com/spreadsheets/d/1CWc5QEPOsd3EN0_VGhViwi6jx7RvExEIxWBal_HvyBk" 
 
 # SOURCE SUPPORT SCRIPTS -------------------------------------------------------
 
 subset_to_accepted_projects <- TRUE
 access_to_internet <- TRUE
-source('./code/functions.R')
+source(here::here('code/functions.R'))
 googledrive::drive_auth()
-1
+2
 # source('./code/ex.R') # for README
-source('./code/data.R')
-
-# GOOGLE SPREADSHEET LINKS -----------------------------------------------------
+source(here::here('code/data.R'))
 
 # Run RMarkdowns to create word docs from google spreadsheet -------------------
 
@@ -55,24 +67,25 @@ for (i in 1:length(srvy0)) {
   vess <- unique(comb$vess[comb$srvy == paste0("srvy_", srvy)])
   vess_not <- unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
   
-  dir.create(paste0(dir_out, srvy), showWarnings = F)
+  dir_out_srvy <- paste0(substr(x = dir_out, start = 1, stop = (nchar(dir_out)-1)), "_", srvy, "/")
+  dir.create(dir_out_srvy, showWarnings = F)
 
   # project summary sheet without description
   filename0 <- paste0(maxyr, "-00-summarynodesc-", srvy, ".docx")
-  rmarkdown::render(paste0("./code/template_summary_nodesc.Rmd"),
+  rmarkdown::render(here::here("code/template_summary_nodesc.Rmd"),
                     output_dir = dir_out,
-                    output_file = paste0(dir_out, filename0))
+                    output_file = filename0)
   file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
-            to = paste0(dir_out, srvy, "/", filename0), 
+            to = paste0(dir_out_srvy, "/", filename0), 
             overwrite = TRUE)
     
   # project summary sheet with description
   filename0 <- paste0(maxyr, "-00-summarydesc-", srvy, ".docx")
-  rmarkdown::render(paste0("./code/template_summary_desc.Rmd"),
+  rmarkdown::render(here::here("code/template_summary_desc.Rmd"),
                     output_dir = dir_out,
-                    output_file = paste0(dir_out, filename0))
+                    output_file = filename0)
   file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
-            to = paste0(dir_out, srvy, "/", filename0), 
+            to = paste0(dir_out_srvy, "/", filename0), 
             overwrite = TRUE)  
 }  
 
@@ -81,22 +94,23 @@ for (i in 1:nrow(special)) {
 
   dat <- special[i,]
   
-  file_name <- paste0(maxyr, "-", str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
+  file_name <- paste0(maxyr, "-", 
+                      stringr::str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
                       dat$last_name, "-", 
                       janitor::make_clean_names(dat$short_title), ".docx")
   
-  rmarkdown::render(paste0("./code/template.Rmd"),
+  rmarkdown::render(here::here("code/template.Rmd"),
                     output_dir = dir_out,
-                    output_file = paste0(dir_out, file_name))
+                    output_file = file_name)
   
-  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
+  temp <- strsplit(x = dat$srvy, split = ", ")[[1]]
   
   for (ii in 1:length(temp)) {
     
-    dir.create(paste0(dir_out, temp[ii]), showWarnings = F)
+    # dir.create(paste0(dir_out, temp[ii]), showWarnings = F)
     
-    file.copy(from = paste0(dir_out, file_name), 
-              to = paste0(dir_out, temp[ii], "/", file_name), 
+    file.copy(from = here::here(dir_out, file_name), 
+              to = paste0(substr(x = dir_out, start = 1, stop = (nchar(dir_out)-1)), "_", temp[ii], "/", file_name), 
               overwrite = TRUE)
     
   }
@@ -121,7 +135,7 @@ for (i in 1:nrow(comb)) {
                      special[,comb$vess[i]] == TRUE # & 
                    #   special$sap_gap == comb$sap_gap[i]
                    ), ] %>% 
-    dplyr::select(short_title, requestor_name, last_name, preserve, short_procedures, numeric_priority) 
+    dplyr::select(short_title, first_name, last_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     
@@ -153,12 +167,11 @@ for (i in 1:nrow(comb)) {
       path = paste0(path0, file_name0,".pptx"))
 
 
-    rmarkdown::render(paste0("./code/template_pptx_landscape.Rmd"), # fix sizing of page
+    rmarkdown::render(here::here("code/template_pptx_landscape.Rmd"), # fix sizing of page
                       output_dir = path0,
                       output_file = paste0(file_name0,".pptx"))
   }
 }
-
 
  # Otolith projects posters by survey -------------------------------------------
 
@@ -202,7 +215,7 @@ for (i in 1:nrow(comb)) {
       path = paste0(path0, file_name0,".pptx"))
 
     # fix sizing of page
-    rmarkdown::render(paste0("./code/template_pptx.Rmd"),
+    rmarkdown::render(here::here("code/template_pptx.Rmd"),
                       output_dir = path0,
                       output_file = paste0(file_name0,".pptx"))
     

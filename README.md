@@ -1,14 +1,17 @@
-# AFSC RACE GAP Special Projects Reports (`gap_special_projects`)
 
-> Code is always in development
+# [AFSC RACE GAP Special Projects Reports (`gap_special_projects`)](https://github.com/afsc-gap-products/gap_special_projects) <img src="https://avatars.githubusercontent.com/u/91760178?s=96&amp;v=4" alt="Logo." align="right" width="139" height="139"/>
 
-This code produces word documents describing each special project request for all GAP surveys using {googledrive} and RMarkdown. 
+> This code is always in development. Find code used for various reports in the code [releases](paste0(https://github.com/afsc-gap-products/gap_special_projects/releases)).
+
+This code produces word, powerpoint, and pdf documents describing special project requests for all GAP surveys using {googledrive} and RMarkdown. 
 
 ## This code is primarily maintained by: 
 
-**Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA; maintainer)
+**Alexandra Dowlin** (Alexandra.Dowlin AT noaa.gov; @liz-dawson-NOAA; maintainer)
 
 **Emily Markowitz** (Emily.Markowitz AT noaa.gov; @EmilyMarkowitz-NOAA; initial developer)
+
+*Previously:* **Liz Dawson** (Liz.Dawson AT noaa.gov; @liz-dawson-NOAA; maintainer)
 
 Alaska Fisheries Science Center, 
 

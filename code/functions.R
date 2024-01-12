@@ -7,7 +7,7 @@
 PKG <- c(
   # other tidyverse
   "tidyr",
-  # "plyr",
+  "here",
   "dplyr",
   "magrittr",
   "readr",
@@ -16,16 +16,11 @@ PKG <- c(
   "here", 
   "officer",
   "officedown",
-  
   "xlsx", 
   "readr",
-  
   "grid", 
   "gridExtra", 
-  
   "flextable", 
-  
-  # Text Management
   "stringr")
 
 PKG <- unique(PKG)
@@ -35,10 +30,9 @@ for (p in PKG) {
     require(p,character.only = TRUE)}
 }
 
-
 # Directory set up -----------------------------------------
 
-dir_out <- paste0("./output/", Sys.Date(),"/")
+dir_out <- paste0(here::here("output", Sys.Date()),"/")
 dir.create(dir_out, showWarnings = F)
 
 # Other user functions -------------------------------------

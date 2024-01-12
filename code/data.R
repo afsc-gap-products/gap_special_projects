@@ -11,12 +11,12 @@ if (access_to_internet) {
   googledrive::drive_download(file = googledrive::as_id(dir_gspecial),
                               type = "xlsx",
                               overwrite = TRUE,
-                              path = paste0("./data/special"))
+                              path = here::here("data/special/"))
   
   googledrive::drive_download(file = googledrive::as_id(dir_gcore),
                               type = "xlsx",
                               overwrite = TRUE,
-                              path = paste0("./data/core"))
+                              path = here::here("data/core/"))
 }
 
 # Load Data --------------------------------------------------------------------
@@ -24,10 +24,10 @@ if (access_to_internet) {
 all_na <- function(x) any(!is.na(x))
 
 special0 <- xlsx::read.xlsx(file = paste0(here::here("data", "special.xlsx")), 
-                            sheetName = "Copy of ALL SURVEYS") %>% 
+                            sheetName = "Form Responses 1") %>% # "Copy of ALL SURVEYS"
   janitor::clean_names() %>% 
-  dplyr::filter(!is.na(timestamp) & 
-                  is.na(crab_project))
+  dplyr::filter(!is.na(timestamp) #& is.na(crab_project)
+                )
 
 stomachs0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")), 
                             sheetName = "Stomachs", startRow = 2) %>% 
@@ -57,10 +57,16 @@ special <- special0 %>%
                                    x = affiliation,
                                    fixed = TRUE),
                 survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
-  dplyr::rename(first_name = requester_s_first_name,
-                last_name = requester_s_last_name) %>% 
-  # tidyr::separate(data = ., col = requester_name, into = c("first_name", "last_name"),
-  #                 sep = " ", remove = FALSE) %>% 
+  
+  # TOLEDO - troubleshoot
+  dplyr::rename("short_on_deck_collection_instructions_675_character_limit" = "short_on_deck_collection_instructions_this_information_will_be_printed_for_on_deck_instructions_please_be_detailed_but_brief") %>% 
+  dplyr::mutate(vessel = c("AKK, OEX"), 
+                priority_ranking = 1,
+                preserve = FALSE,
+                detailed_collection_procedures = "do itttt", 
+                short_title = "blarggg",
+                order_of_importance = 1) %>%
+  
   dplyr::mutate( # TOLEDO, need to double check!
     requestor_name = paste0(first_name, " ", last_name), 
     target = dplyr::case_when(
@@ -98,8 +104,10 @@ special <- special0 %>%
 #   # dplyr::filter(project_accepted_t_f == TRUE)
 # }
 
-vess <- unique(special$vessel)[!grepl(pattern = ",", x = unique(special$vessel)) & 
-                               (unique(special$vessel) != "[NONE]")]
+# vess <- unique(special$vessel)[!grepl(pattern = ",", x = unique(special$vessel)) & 
+#                                (unique(special$vessel) != "[NONE]")]
+vess <- toupper(sapply(strsplit(x = comb$vess, split = "_", fixed = TRUE), "[[", 2))
+
 for (i in 1:length(vess)) {
   special$temp <- ifelse(grepl(pattern = vess[i], x = special$vessel, fixed = TRUE), 
                        TRUE, FALSE)
@@ -140,17 +148,19 @@ special <- special %>%
 # }
 
 s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"), 
-                survey = c("Northern Bering Sea", 
+                survey = c("Northern Bering Sea Shelf", 
                            "Eastern Bering Sea Shelf", 
                            "Gulf of Alaska", 
                            "Aleutian Islands", 
                            "Bering Sea Slope") )
 
 comb0 <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
+special$srvy <- special$survey
 for (i in 1:length(comb0)) {
   special <- special %>% 
     dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb0[i]))) 
-  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$srvy == comb0[i]])
+  names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$survey == comb0[i]])
+  special$srvy <- gsub(pattern = comb0[i], replacement = s$srvy[s$survey == comb0[i]], x = special$srvy)
 }
 
 special <- special %>% 
