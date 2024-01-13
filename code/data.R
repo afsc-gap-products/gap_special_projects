@@ -47,7 +47,15 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
 # Wrangle special project data -------------------------------------------------
 
 special <- special0 %>% 
-    dplyr::filter(!is.na(email_address)) %>% 
+  
+  # TOLEDO - these will be available in the "COPY" tab when it is made
+  dplyr::rename('survey' = "x2024_bottom_trawl_surveys") %>% 
+  dplyr::mutate(vessel = c("AKK, OEX"), 
+                priority_ranking = 1,
+                preserve = "freeze",
+                order_of_importance = 1) %>%
+  
+  dplyr::filter(!is.na(email_address)) %>% 
   dplyr::mutate(affiliation = gsub(pattern = " - ",
                                    replacement = "-",
                                    x = as.character(affiliation),
@@ -57,16 +65,6 @@ special <- special0 %>%
                                    x = affiliation,
                                    fixed = TRUE),
                 survey = gsub(pattern = ";", replacement = ", ", x = survey)) %>%
-  
-  # TOLEDO - troubleshoot
-  dplyr::rename("short_on_deck_collection_instructions_675_character_limit" = "short_on_deck_collection_instructions_this_information_will_be_printed_for_on_deck_instructions_please_be_detailed_but_brief") %>% 
-  dplyr::mutate(vessel = c("AKK, OEX"), 
-                priority_ranking = 1,
-                preserve = FALSE,
-                detailed_collection_procedures = "do itttt", 
-                short_title = "blarggg",
-                order_of_importance = 1) %>%
-  
   dplyr::mutate( # TOLEDO, need to double check!
     requestor_name = paste0(first_name, " ", last_name), 
     target = dplyr::case_when(
@@ -90,7 +88,7 @@ special <- special0 %>%
     dplyr::across(where(is.character), 
                   ~tidyr::replace_na(data = ., replace = "[None]"))) %>%
   dplyr::rename(numeric_priority = order_of_importance, 
-                short_procedures = short_on_deck_collection_instructions_675_character_limit) %>% 
+                short_procedures = short_on_deck_instructions) %>% 
   dplyr::mutate(vessel = toupper(vessel), 
                 numeric_priority = as.numeric(numeric_priority), 
                 numeric_priority = ifelse(is.na(numeric_priority),

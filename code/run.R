@@ -45,15 +45,15 @@ dir_gcore <- "https://docs.google.com/spreadsheets/d/1WHyetA20twlq6uhp5VR-sHtm2V
 # dir_gspecial <- "https://docs.google.com/spreadsheets/d/1DaU7AxlOf3MjDA-LV46at_PZeVaZiHPiDvZjhRSW1xE" 
 
 # 2024: 
-dir_gspecial <- "https://docs.google.com/spreadsheets/d/1CWc5QEPOsd3EN0_VGhViwi6jx7RvExEIxWBal_HvyBk" 
+# google form: https://docs.google.com/forms/d/e/1FAIpQLSes4h_6QBAZNU26kss6tFOLRcdhqupwzvNbHuFBr2870_MY8g/closedform
+dir_gspecial <- "https://docs.google.com/spreadsheets/d/1pODOzo2yu8m_hjWq7iUsRJXrXofgeIfJkzuHum1xEwI" 
 
 # SOURCE SUPPORT SCRIPTS -------------------------------------------------------
 
 subset_to_accepted_projects <- TRUE
 access_to_internet <- TRUE
 source(here::here('code/functions.R'))
-googledrive::drive_auth()
-2
+googledrive::drive_auth(); 2
 # source('./code/ex.R') # for README
 source(here::here('code/data.R'))
 
