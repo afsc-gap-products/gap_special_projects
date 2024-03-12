@@ -24,7 +24,7 @@ if (access_to_internet) {
 all_na <- function(x) any(!is.na(x))
 
 special0 <- xlsx::read.xlsx(file = paste0(here::here("data", "special.xlsx")), 
-                            sheetName = "Form Responses 1") %>% # "Copy of ALL SURVEYS"
+                            sheetName = "Copy of Form Responses 1") %>% 
   janitor::clean_names() %>% 
   dplyr::filter(!is.na(timestamp) #& is.na(crab_project)
                 )
@@ -47,16 +47,13 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
 # Wrangle special project data -------------------------------------------------
 
 special <- special0 %>% 
-  
-  # TOLEDO - these will be available in the "COPY" tab when it is made
-  dplyr::rename('survey' = "x2024_bottom_trawl_surveys") %>% 
-  dplyr::mutate(vessel = c("AKK, OEX"), 
-                priority_ranking = 1,
-                preserve = "freeze",
-                order_of_importance = 1) %>%
-  
-  dplyr::filter(!is.na(email_address)) %>% 
-  dplyr::mutate(affiliation = gsub(pattern = " - ",
+  dplyr::rename(survey = x2024_bottom_trawl_surveys, 
+                numeric_priority = order_of_importance, 
+                short_procedures = short_on_deck_instructions) %>%
+  # dplyr::filter(!is.na(email_address)) %>% 
+  dplyr::mutate(
+    preserve = specimen_preservation_method, 
+    affiliation = gsub(pattern = " - ",
                                    replacement = "-",
                                    x = as.character(affiliation),
                                    fixed = TRUE),
@@ -87,8 +84,6 @@ special <- special0 %>%
                   gsub, pattern = "none", replace = "[None]"), 
     dplyr::across(where(is.character), 
                   ~tidyr::replace_na(data = ., replace = "[None]"))) %>%
-  dplyr::rename(numeric_priority = order_of_importance, 
-                short_procedures = short_on_deck_instructions) %>% 
   dplyr::mutate(vessel = toupper(vessel), 
                 numeric_priority = as.numeric(numeric_priority), 
                 numeric_priority = ifelse(is.na(numeric_priority),
@@ -153,13 +148,15 @@ s <- data.frame(srvy = c("NBS", "EBS", "GOA", "AI", "BSSlope"),
                            "Bering Sea Slope") )
 
 comb0 <- unique(strsplit(x = paste(special$survey, collapse = ", "), split = ", ", fixed = TRUE)[[1]])
-special$srvy <- special$survey
+special$survey_long <- special$survey
 for (i in 1:length(comb0)) {
   special <- special %>% 
-    dplyr::mutate(temp = unlist(lapply(X = survey, grepl, pattern = comb0[i]))) 
+    dplyr::mutate(
+      temp = unlist(lapply(X = survey, grepl, pattern = comb0[i]))) 
   names(special)[names(special) == "temp"] <- paste0("srvy_", s$srvy[s$survey == comb0[i]])
-  special$srvy <- gsub(pattern = comb0[i], replacement = s$srvy[s$survey == comb0[i]], x = special$srvy)
+  special$survey <- gsub(pattern = comb0[i], replacement = s$srvy[s$survey == comb0[i]], x = special$survey)
 }
 
 special <- special %>% 
   dplyr::arrange(numeric_priority)
+

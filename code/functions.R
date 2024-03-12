@@ -173,7 +173,7 @@ poster_special <- function(dat0,
   }
   
   dat0 <- dat0 %>% 
-    dplyr::mutate(numeric_priority = ifelse(grepl(pattern = "outreach", x = short_title, ignore.case = TRUE), 
+    dplyr::mutate(numeric_priority = ifelse(grepl(pattern = "outreach", x = scientific_collection_short_title, ignore.case = TRUE), 
                                             (max(numeric_priority, na.rm = TRUE)+1), 
                                             numeric_priority), 
                   numeric_priority = ifelse(is.na(numeric_priority), 
@@ -209,7 +209,7 @@ poster_special <- function(dat0,
                                  paste0(' %>%
     flextable::compose(j = "dummy',cc,'",
                        value = as_paragraph(
-                          flextable::as_chunk(paste0((short_title',cc,')), 
+                          flextable::as_chunk(paste0((scientific_collection_short_title',cc,')), 
                                   props = fp_text_default(color = "#006699", # "white", 
                                                           bold = TRUE, 
                                                           font.size = ',subheader_size+2,')), 

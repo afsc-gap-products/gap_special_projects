@@ -50,26 +50,65 @@ dir_gspecial <- "https://docs.google.com/spreadsheets/d/1pODOzo2yu8m_hjWq7iUsRJX
 
 # SOURCE SUPPORT SCRIPTS -------------------------------------------------------
 
-subset_to_accepted_projects <- TRUE
 access_to_internet <- TRUE
 source(here::here('code/functions.R'))
-googledrive::drive_auth(); 2
+googledrive::drive_auth()
+2
 # source('./code/ex.R') # for README
 source(here::here('code/data.R'))
 
-# Run RMarkdowns to create word docs from google spreadsheet -------------------
+# Non-core survey-specific resource books (all) --------------------------------
+
+  dat0 <- dat <- special
+  srvy <- ""
+  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) 
+  
+  # project book
+  filename0 <- paste0(maxyr, "-000-all.docx")
+  rmarkdown::render(here::here("code/template_book.Rmd"),
+                    output_dir = dir_out,
+                    output_file = filename0)
+  file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+            to = paste0(dir_out, "/all/", filename0), 
+            overwrite = TRUE)
+
+# Non-core survey-specific resource books by survey ----------------------------
+
+srvy0 <- unique(gsub(pattern = "srvy_", replacement = "", x = comb$srvy))
+
+for (i in 1:length(srvy0)) {
+  dat0 <- dat <- special %>% dplyr::filter(grepl(x = survey, pattern = srvy))
+  srvy <- srvy0[i]
+  vess <- unique(comb$vess[comb$srvy == paste0("srvy_", srvy)])
+  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) # unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
+  
+  dir_out_srvy <- paste0(substr(x = dir_out, start = 1, stop = (nchar(dir_out)-1)), "_", srvy, "/")
+  dir.create(dir_out_srvy, showWarnings = F)
+  
+  # project book
+  filename0 <- paste0(maxyr, "-000-", srvy, ".docx")
+  rmarkdown::render(here::here("code/template_book.Rmd"),
+                    output_dir = dir_out,
+                    output_file = filename0)
+  file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+            to = paste0(dir_out_srvy, "/", filename0), 
+            overwrite = TRUE)
+}
+
+# Non-core stand alone summary tables ------------------------------------------
 
 srvy0 <- unique(gsub(pattern = "srvy_", replacement = "", x = comb$srvy))
 
 for (i in 1:length(srvy0)) {
   
+  dat0 <- dat <- special %>% dplyr::filter(grepl(x = survey, pattern = srvy))
   srvy <- srvy0[i]
   vess <- unique(comb$vess[comb$srvy == paste0("srvy_", srvy)])
-  vess_not <- unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
+  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) # unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
   
   dir_out_srvy <- paste0(substr(x = dir_out, start = 1, stop = (nchar(dir_out)-1)), "_", srvy, "/")
   dir.create(dir_out_srvy, showWarnings = F)
-
+  
   # project summary sheet without description
   filename0 <- paste0(maxyr, "-00-summarynodesc-", srvy, ".docx")
   rmarkdown::render(here::here("code/template_summary_nodesc.Rmd"),
@@ -78,7 +117,7 @@ for (i in 1:length(srvy0)) {
   file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
             to = paste0(dir_out_srvy, "/", filename0), 
             overwrite = TRUE)
-    
+  
   # project summary sheet with description
   filename0 <- paste0(maxyr, "-00-summarydesc-", srvy, ".docx")
   rmarkdown::render(here::here("code/template_summary_desc.Rmd"),
@@ -87,23 +126,24 @@ for (i in 1:length(srvy0)) {
   file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
             to = paste0(dir_out_srvy, "/", filename0), 
             overwrite = TRUE)  
-}  
+}
 
-# individual project description pages
+# Non-core individual project description pages --------------------------------
+
 for (i in 1:nrow(special)) {
-
+  jj <- i
   dat <- special[i,]
   
   file_name <- paste0(maxyr, "-", 
                       stringr::str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
                       dat$last_name, "-", 
-                      janitor::make_clean_names(dat$short_title), ".docx")
+                      janitor::make_clean_names(dat$scientific_collection_short_title), ".docx")
   
   rmarkdown::render(here::here("code/template.Rmd"),
                     output_dir = dir_out,
                     output_file = file_name)
   
-  temp <- strsplit(x = dat$srvy, split = ", ")[[1]]
+  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
   
   for (ii in 1:length(temp)) {
     
@@ -114,7 +154,6 @@ for (i in 1:nrow(special)) {
               overwrite = TRUE)
     
   }
-  
 }
 
 # move all loose files to the "all" folder
@@ -134,8 +173,8 @@ for (i in 1:nrow(comb)) {
   dat0 <- special[(special[,comb$srvy[i]] == TRUE & 
                      special[,comb$vess[i]] == TRUE # & 
                    #   special$sap_gap == comb$sap_gap[i]
-                   ), ] %>% 
-    dplyr::select(short_title, first_name, last_name, preserve, short_procedures, numeric_priority) 
+  ), ] %>% 
+    dplyr::select(scientific_collection_short_title, first_name, last_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     
@@ -161,19 +200,19 @@ for (i in 1:nrow(comb)) {
                          spacing = 1.25,
                          pad = 20,
                          fig_size = .5)
-
+    
     flextable::save_as_pptx(
       " " = ft,
       path = paste0(path0, file_name0,".pptx"))
-
-
+    
+    
     rmarkdown::render(here::here("code/template_pptx_landscape.Rmd"), # fix sizing of page
                       output_dir = path0,
                       output_file = paste0(file_name0,".pptx"))
   }
 }
 
- # Otolith projects posters by survey -------------------------------------------
+# Otolith projects posters by survey -------------------------------------------
 
 comb <- otoliths0 %>% # the different combination of posters we will need to make
   dplyr::select(survey) %>% 
@@ -213,7 +252,7 @@ for (i in 1:nrow(comb)) {
     flextable::save_as_pptx(
       " " = ft,
       path = paste0(path0, file_name0,".pptx"))
-
+    
     # fix sizing of page
     rmarkdown::render(here::here("code/template_pptx.Rmd"),
                       output_dir = path0,

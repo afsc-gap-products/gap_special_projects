@@ -4,20 +4,18 @@ output:
       reference_docx: styles_reference.docx
 ---
 
-```{r setup, include=FALSE}
+```{r setup2, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 ```
 
-# `r paste0('**Special Projects for the ',maxyr,' ', srvy, ' Bottom Trawl Survey**') `
+```{r nodesc-table, tab.cap = paste0('Summary of non-core projects for the ',maxyr,' ', srvy, ' bottom trawl survey without descriptions')}
 
-```{r}
-
-pgwidth <- 7.5
+pgwidth <- 6.5
 even_body = "#CFCFCF"
 odd_body = "#EFEFEF"
 
-temp <- special %>% 
-  dplyr::filter(grepl(x = survey, pattern = srvy, ignore.case = FALSE)) %>% 
+temp <- dat %>% # special %>% 
+  # dplyr::filter(grepl(x = survey, pattern = srvy, ignore.case = FALSE)) %>% 
   dplyr::arrange(numeric_priority) %>% 
   dplyr::select(priority_ranking, vessel, scientific_collection_short_title)
 
@@ -59,7 +57,7 @@ ft <- temp %>%
                           max_width = pgwidth,
                           unit = "in") %>%
   flextable::width(x = .,
-                   width = c(pgwidth*.15, pgwidth*.15, pgwidth*.7),
+                   width = c(pgwidth*.2, pgwidth*.2, pgwidth*.6),
                    j = 1:3,
                    unit = "in") %>%
   

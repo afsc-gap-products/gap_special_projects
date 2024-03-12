@@ -4,22 +4,19 @@ output:
       reference_docx: styles_reference_land.docx
 ---
 
-```{r setup, include=FALSE}
+```{r setup1, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 # <!---BLOCK_LANDSCAPE_START--->
 # <!---BLOCK_LANDSCAPE_STOP--->
 ```
 
-# `r paste0('**Special Projects for the ',maxyr,' ', srvy, ' Bottom Trawl Survey**') `
-
-```{r}
+```{r desc-table, tab.cap = paste0('Summary of non-core projects for the ',maxyr,' ', srvy, ' bottom trawl survey with descriptions')}
 
 pgwidth <- 9.5
 even_body = "#CFCFCF"
 odd_body = "#EFEFEF"
 
-temp <- special %>% 
-    dplyr::filter(grepl(x = survey, pattern = srvy, ignore.case = FALSE)) %>% 
+temp <- dat %>% 
   dplyr::arrange(numeric_priority) %>% 
   dplyr::select(last_name, scientific_collection_short_title, preserve, short_procedures, vessel) 
 

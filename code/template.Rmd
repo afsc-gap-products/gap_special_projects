@@ -1,41 +1,46 @@
----
-title: "`r paste0(dat$long_title, '\n\n*(', dat$short_title, ')*')`"
-author: 
-- affiliation: "`r dat$affiliation`"
-  email: "`r dat$email_address`"
-  name: "`r dat$requester_name`"
-addr: 
-  l1: "`r dat$x24_7_contact_phone_number`"
-output: 
-  word_document: 
-      reference_docx: styles_reference.docx
----
 
-```{r setup, include=FALSE}
+```{r setup-{{jj}}, include=FALSE}
 knitr::opts_chunk$set(echo = F)
+
+dat <- dat0[{{jj}},]
+
+# title: "`r paste0(dat$scientific_collection_full_title, '\n\n*(', dat$scientific_collection_short_title, ')*')`"
+# author: 
+# - affiliation: "`r dat$affiliation`"
+#   email: "`r dat$email_address`"
+#   name: "`r dat$requester_name`"
+# addr: 
+#   l1: "`r dat$x24_7_contact_phone_number`"
+ 
+#  ---
+# output: 
+#   officedown::rdocx_document: 
+#       reference_docx: styles_reference.docx
+# ---
 ```
 
-### **Requester:** `r dat$requester_name` (`r dat$email_address`; `r dat$x24_7_contact_phone_number `)
+## `r dat$scientific_collection_full_title `
 
-### **Affiliation:** `r dat$affiliation`
+#### `r dat$scientific_collection_short_title `
 
-## General Information
+**Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$x24_7_contact_phone_number), "[no phone number listed]", dat$x24_7_contact_phone_number ) `)
 
-**`r maxyr` GF `r dat$survey `**
+**Affiliation:** `r dat$affiliation`
 
- - *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
- - *Project Funding Source:* `r dat$funding `
- - *Is this project funding extra sea days?* `r dat$extra_sea_days `
- - *Is this project funding fuel costs?* `r dat$fuel_costs `
+### General Information
 
-**Project Description and Justification:** `r dat$goals_and_justification`
+**`r maxyr` Groundfish `r dat$survey `**
 
-```{r}
-```
+ * *Is this a new or a repeat collection?:* `r dat$new_or_repeat `
+ * *Project funding source:* `r dat$funding `
+ * *Is this project funding extra sea days?* `r dat$extra_sea_days `
+ * *Is this project funding fuel costs?* `r dat$fuel_costs `
 
-## Detailed Collection Procedures
+**Project description and justification:** `r dat$collection_goals_and_justification`
 
-**Detailed Collection Procedures:** `r dat$detailed_collection_protocols`
+### Detailed Collection Procedures
+
+**Detailed collection procedures:** `r dat$detailed_collection_procedures`
 
 **Sampling design:** `r dat$sampling_design`
 
@@ -43,57 +48,53 @@ knitr::opts_chunk$set(echo = F)
 
 **Estimated number of hauls to sample: ** `r ifelse(is.na(dat$estimated_hauls), "[None]", dat$estimated_hauls)`
 
-## Biological Collection Details
+### Biological Collection Details
 
-   - *Species To Be Collected:* `r dat$animal_type``r ifelse(is.na(dat$species_name), "", paste0("  - ", dat$species_name))`
-   - *Type of specimen to collect:* `r dat$specimen_type`
-   - *Specimen-level data to collect:* `r dat$specimen_data`
-   - *Specimen preservation method:* `r dat$specimen_preservation_method`
+ * *Species to be collected:* `r dat$animal_type``r ifelse(is.na(dat$species_name), "", paste0("  - ", dat$species_name))`
+ * *Type of specimen to collect:* `r dat$specimen_type`
+ * *Specimen-level data to collect:* `r dat$specimen_data`
+ * *Specimen preservation method:* `r dat$specimen_preservation_method`
 
-```{r}
-```
+### Sampling Design Details
 
-## Sampling Design Details
-
-**Target Quantity:** `r dat$target `
+**Target quantity:** `r dat$target `
 
 **Will the request still be useful if the requested amount or frequency of specimens collected is not achieved?** `r dat$if_the_requested_amount_or_frequency_of_specimens_is_not_achieved_will_the_request_still_be_useful `
 
 **What is the sampling protocol:** `r dat$sampling_design`
 
-**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$provide_the_criteria_for_selecting_your_specimens`
+**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$criteria_for_selecting_project_specimens`
 
-## Geographic Region of Collection
+### Geographic Region of Collection
 
-**Survey:** `r dat$survey`
+**Survey:** `r dat$survey_long`
 
-**Region:** `r dat$region`
+**Place keywords:** `r dat$place_keywords`
 
 **Bounding coordinates**
 
-  - *Northern Boundary:* `r dat$northern_boundary`
-  - *Southern Boundary:* `r dat$southern_boundary`
-  - *Eastern Boundary:* `r dat$eastern_boundary`
-  - *Western Boundary:* `r dat$western_boundary`
+ * *Northern Boundary:* `r dat$northern_boundary`
+ * *Southern Boundary:* `r dat$southern_boundary`
+ * *Eastern Boundary:* `r dat$eastern_boundary`
+ * *Western Boundary:* `r dat$western_boundary`
 
-```{r}
-```
+### Chemicals, Supplies, Equipment, and Shipping
 
-## Chemicals, Supplies, Equipment, and Shipping
+**Project chemicals:**  
 
-**Project Chemicals:**  
+ * *Formaldehyde solutions:* `r dat$afsc_provided_chemicals_and_amounts_needed_formaldehyde `
+ * *Ethanol solutions:* `r dat$afsc_provided_chemicals_and_amounts_needed_ethanol `
+ * *glycerol/thymol:* `r dat$afsc_provided_chemicals_and_amounts_needed_glycerol_thymol `
+ * *DNA buffer (DMSO/EDTA/NaCl):* `r dat$afsc_provided_chemicals_and_amounts_needed_dna_buffer_dmso_edta_na_cl `
 
-   - *Formaldehyde solutions:* `r dat$afsc_provided_chemicals_formaldehyde `
-   - *Ethanol solutions:* `r dat$afsc_provided_chemicals_ethanol `
-   - *glycerol/thymol:* `r dat$afsc_provided_chemicals_glycerol_thymol `
-   - *DNA buffer (DMSO/EDTA/NaCl):* `r dat$afsc_provided_chemicals_dna_buffer_dmso_edta_na_cl `
+**Project supplies:** 
 
-**Project Supplies:** 
+ * *Supplies provided by the AFSC:* `r dat$afsc_supplies `
+ * *Additional chemicals or hazardous materials:* `r dat$additional_chemicals_or_hazardous_materials`
+ * *Supplies provided by the requester:* `r dat$requester_provided_chemicals ` 
 
-   - *Supplies provided by the AFSC:* `r dat$afsc_supplies `
-   - *Supplies provided by the requester:* `r dat$requester_supplies ` 
-
-**Detailed Shipping Instructions:** `r dat$detailed_shipping_instructions `
+**Detailed shipping instructions:** `r dat$detailed_shipping_instructions `
 
 **Permits issued or pending:** `r dat$additional_permits_issued_or_pending `
 
+\newpage
