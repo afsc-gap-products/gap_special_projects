@@ -59,18 +59,18 @@ source(here::here('code/data.R'))
 
 # Non-core survey-specific resource books (all) --------------------------------
 
-  dat0 <- dat <- special
-  srvy <- ""
-  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) 
-  
-  # project book
-  filename0 <- paste0(maxyr, "-000-all.docx")
-  rmarkdown::render(here::here("code/template_book.Rmd"),
-                    output_dir = dir_out,
-                    output_file = filename0)
-  file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
-            to = paste0(dir_out, "/all/", filename0), 
-            overwrite = TRUE)
+dat0 <- dat <- special
+srvy <- ""
+vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) 
+
+# project book
+filename0 <- paste0(maxyr, "-000-all.docx")
+rmarkdown::render(here::here("code/template_book.Rmd"),
+                  output_dir = dir_out,
+                  output_file = filename0)
+file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+          to = paste0(dir_out, "/all/", filename0), 
+          overwrite = TRUE)
 
 # Non-core survey-specific resource books by survey ----------------------------
 
