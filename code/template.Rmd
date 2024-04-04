@@ -19,9 +19,9 @@ dat <- dat0[{{jj}},]
 # ---
 ```
 
-## `r dat$scientific_collection_full_title `
+## `r dat$long_title `
 
-#### `r dat$scientific_collection_short_title `
+#### `r dat$short_title `
 
 **Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$x24_7_contact_phone_number), "[no phone number listed]", dat$x24_7_contact_phone_number ) `)
 
