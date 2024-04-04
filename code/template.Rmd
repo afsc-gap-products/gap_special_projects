@@ -23,7 +23,7 @@ dat <- dat0[{{jj}},]
 
 #### `r dat$short_title `
 
-**Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$x24_7_contact_phone_number), "[no phone number listed]", dat$x24_7_contact_phone_number ) `)
+**Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$contact_number), "[no phone number listed]", dat$contact_phone_number ) `)
 
 **Affiliation:** `r dat$affiliation`
 
@@ -36,7 +36,7 @@ dat <- dat0[{{jj}},]
  * *Is this project funding extra sea days?* `r dat$extra_sea_days `
  * *Is this project funding fuel costs?* `r dat$fuel_costs `
 
-**Project description and justification:** `r dat$collection_goals_and_justification`
+**Project description and justification:** `r dat$goals_and_justification`
 
 ### Detailed Collection Procedures
 
@@ -63,7 +63,7 @@ dat <- dat0[{{jj}},]
 
 **What is the sampling protocol:** `r dat$sampling_design`
 
-**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$criteria_for_selecting_project_specimens`
+**Criteria for sub-sampling if selective or stratified sub-sampling:** `r dat$criteria_for_selecting_your_specimens`
 
 ### Geographic Region of Collection
 
@@ -82,16 +82,16 @@ dat <- dat0[{{jj}},]
 
 **Project chemicals:**  
 
- * *Formaldehyde solutions:* `r dat$afsc_provided_chemicals_and_amounts_needed_formaldehyde `
- * *Ethanol solutions:* `r dat$afsc_provided_chemicals_and_amounts_needed_ethanol `
- * *glycerol/thymol:* `r dat$afsc_provided_chemicals_and_amounts_needed_glycerol_thymol `
- * *DNA buffer (DMSO/EDTA/NaCl):* `r dat$afsc_provided_chemicals_and_amounts_needed_dna_buffer_dmso_edta_na_cl `
+ * *Formaldehyde solutions:* `r dat$afsc_provided_chemicals_formaldehyde `
+ * *Ethanol solutions:* `r dat$afsc_provided_chemicals_ethanol `
+ * *glycerol/thymol:* `r dat$afsc_provided_chemicals_glycerol_thymol `
+ * *DNA buffer (DMSO/EDTA/NaCl):* `r dat$afsc_provided_chemicals_dna_buffer_dmso_edta_na_cl `
 
 **Project supplies:** 
 
  * *Supplies provided by the AFSC:* `r dat$afsc_supplies `
  * *Additional chemicals or hazardous materials:* `r dat$additional_chemicals_or_hazardous_materials`
- * *Supplies provided by the requester:* `r dat$requester_provided_chemicals ` 
+ * *Supplies provided by the requester:* `r dat$requester_supplies ` 
 
 **Detailed shipping instructions:** `r dat$detailed_shipping_instructions `
 
