@@ -47,7 +47,7 @@ crab0 <- xlsx::read.xlsx(file = paste0(here::here("data", "core.xlsx")),
 # Wrangle special project data -------------------------------------------------
 
 special <- special0 %>% 
-  dplyr::rename(survey = x2024_bottom_trawl_surveys, 
+  dplyr::rename(#survey = x2024_bottom_trawl_surveys, 
                 numeric_priority = order_of_importance, 
                 short_procedures = short_on_deck_instructions) %>%
   # dplyr::filter(!is.na(email_address)) %>% 

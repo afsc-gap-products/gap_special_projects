@@ -17,7 +17,7 @@ odd_body = "#EFEFEF"
 temp <- dat %>% # special %>% 
   # dplyr::filter(grepl(x = survey, pattern = srvy, ignore.case = FALSE)) %>% 
   dplyr::arrange(numeric_priority) %>% 
-  dplyr::select(priority_ranking, vessel, scientific_collection_short_title)
+  dplyr::select(priority_ranking, vessel, short_title)
 
 for (iii in 1:length(vess_not)){
   temp$vessel <- gsub(pattern = paste0(vess_not[iii]), replacement = "", x = temp$vessel)
@@ -36,14 +36,14 @@ ft <- temp %>%
   flextable::set_header_labels(x = .,
                                "priority_ranking" = "Priority", 
                                "vessel" = "Vessel", 
-                               "scientific_collection_short_title" = "Project Title") %>%
+                               "short_title" = "Project Title") %>%
   # table aesthetics
   flextable::align_text_col(x = ., align = "left", header = TRUE) %>% 
   flextable::align_nottext_col(x = ., align = "right", header = TRUE) %>% 
   flextable::font(x = ., fontname = "Arial", part = "all") %>%
   flextable::valign(x = ., valign = "top", part = "body") %>%
   flextable::fontsize(x = ., size = 10, part = "body") %>%
-  flextable::bold(x = ., bold = TRUE, j = "scientific_collection_short_title", part = "body") %>% 
+  flextable::bold(x = ., bold = TRUE, j = "short_title", part = "body") %>% 
   
   # header
   flextable::merge_h(., part = "header") %>%

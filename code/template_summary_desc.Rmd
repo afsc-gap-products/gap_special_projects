@@ -18,7 +18,7 @@ odd_body = "#EFEFEF"
 
 temp <- dat %>% 
   dplyr::arrange(numeric_priority) %>% 
-  dplyr::select(last_name, scientific_collection_short_title, preserve, short_procedures, vessel) 
+  dplyr::select(last_name, short_title, preserve, short_procedures, vessel) 
 
 for (iii in 1:length(vess_not)){
   temp$vessel <- gsub(pattern = paste0(vess_not[iii]), replacement = "", x = temp$vessel)
@@ -35,7 +35,7 @@ ft <- temp %>%
   flextable::flextable() %>% 
   flextable::set_header_labels(x = .,
                                "last_name" = "Last name", 
-                               "scientific_collection_short_title" = "Project Title", 
+                               "short_title" = "Project Title", 
                                "preserve" = "Preservation", 
                                "short_procedures" = "Work Required", 
                                "vessel" = "Vessel") %>% 
@@ -45,7 +45,7 @@ ft <- temp %>%
   flextable::font(x = ., fontname = "Arial", part = "all") %>%
   flextable::valign(x = ., valign = "top", part = "body") %>%
   flextable::fontsize(x = ., size = 10, part = "body") %>%
-  flextable::bold(x = ., bold = TRUE, j = "scientific_collection_short_title", part = "body") %>% 
+  flextable::bold(x = ., bold = TRUE, j = "short_title", part = "body") %>% 
   
   # header
   flextable::merge_h(., part = "header") %>%
