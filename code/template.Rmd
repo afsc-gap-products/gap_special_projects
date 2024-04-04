@@ -23,7 +23,7 @@ dat <- dat0[{{jj}},]
 
 #### `r dat$short_title `
 
-**Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$contact_number), "[no phone number listed]", dat$contact_phone_number ) `)
+**Requester:** `r dat$requestor_name` (`r dat$email_address`; `r ifelse(is.na(dat$contact_number), "[no phone number listed]", dat$contact_number ) `)
 
 **Affiliation:** `r dat$affiliation`
 
