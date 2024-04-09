@@ -19,6 +19,9 @@ temp <- dat %>% # special %>%
   dplyr::arrange(numeric_priority) %>% 
   dplyr::select(priority_ranking, vessel, short_title)
 
+vess <- toupper(gsub(pattern = "vess_", replacement = "", x = vess)) 
+vess_not <- toupper(gsub(pattern = "vess_", replacement = "", x = vess_not)) 
+
 for (iii in 1:length(vess_not)){
   temp$vessel <- gsub(pattern = paste0(vess_not[iii]), replacement = "", x = temp$vessel)
 }

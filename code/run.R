@@ -82,7 +82,8 @@ for (i in 1:length(srvy0)) {
   dat0 <- dat <- special %>% dplyr::filter(grepl(x = survey, pattern = srvy))
   srvy <- srvy0[i]
   vess <- unique(comb$vess[comb$srvy == paste0("srvy_", srvy)])
-  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) # unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)])))
+  vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) 
+    #unique(toupper(gsub(pattern = "vess_", replacement = "", x = comb$vess[!(comb$vess %in% vess)]))) 
   
   dir_out_srvy <- paste0(substr(x = dir_out, start = 1, stop = (nchar(dir_out)-1)), "_", srvy, "/")
   dir.create(dir_out_srvy, showWarnings = F)
