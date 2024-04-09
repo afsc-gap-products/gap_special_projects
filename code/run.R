@@ -29,8 +29,8 @@ comb <- data.frame(srvy = c("srvy_AI", "srvy_AI",
                             "srvy_EBS", "srvy_EBS"), 
                    vessel = c("Ocean Explorer", "Alaska Provider", 
                               "Alaska Knight", "Northwest Explorer"), 
-                   vess = c("oex", "akp", 
-                            "akk", "nwx"), 
+                   vess = c("vess_oex", "vess_akp", 
+                            "vess_akk", "vess_nwx"), 
                    sap_gap = c("gap", "gap", "gap", "gap")) 
 
 # GOOGLE SPREADSHEET LINKS -----------------------------------------------------
