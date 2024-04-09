@@ -77,13 +77,13 @@ special <- special0 %>%
       TRUE ~ paste0(minimum_number_of_specimens," - ",maximum_number_of_specimens)
     ), 
     dplyr::across(where(is.character),
-                  gsub, pattern = " , ", replace = ", "),
+                  ~ gsub(pattern = " , ", replace = ", ", .)),
     dplyr::across(where(is.character), 
-                  gsub, pattern = " ; ", replace = "; "), 
+                  ~ gsub(pattern = " ; ", replace = "; ", .)), 
     dplyr::across(where(is.character), 
-                  gsub, pattern = "none", replace = "[None]"), 
+                  ~ gsub(pattern = "none", replace = "[None]", .)), 
     dplyr::across(where(is.character), 
-                  ~tidyr::replace_na(data = ., replace = "[None]"))) %>%
+                  ~ tidyr::replace_na(data = .x, replace = "[None]"))) %>%
   dplyr::mutate(vessel = toupper(vessel), 
                 numeric_priority = as.numeric(numeric_priority), 
                 numeric_priority = ifelse(is.na(numeric_priority),
