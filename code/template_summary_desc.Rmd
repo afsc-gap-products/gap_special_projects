@@ -16,9 +16,6 @@ pgwidth <- 9.5
 even_body = "#CFCFCF"
 odd_body = "#EFEFEF"
 
-vess <- toupper(gsub(pattern = "vess_", replacement = "", x = vess)) 
-vess_not <- toupper(gsub(pattern = "vess_", replacement = "", x = vess_not)) 
-
 temp <- dat %>% 
   dplyr::arrange(numeric_priority) %>% 
   dplyr::select(last_name, short_title, preserve, short_procedures, vessel) 
