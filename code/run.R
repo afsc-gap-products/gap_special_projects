@@ -68,7 +68,8 @@ filename0 <- paste0(maxyr, "-000-all.docx")
 rmarkdown::render(here::here("code/template_book.Rmd"),
                   output_dir = dir_out,
                   output_file = filename0)
-file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders
+# dir.create(path = paste0(dir_out, "/all/")) 
+file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders. Requires an 'all' folder in the output directory, e.g., if the date is 2024-04-08, you need a folder output/2024-04-08/all/
           to = paste0(dir_out, "/all/", filename0), 
           overwrite = TRUE)
 
@@ -133,17 +134,18 @@ for (i in 1:length(srvy0)) {
 for (i in 1:nrow(special)) {
   jj <- i
   dat <- special[i,]
+  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
   
   file_name <- paste0(maxyr, "-", 
                       stringr::str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
                       dat$last_name, "-", 
-                      janitor::make_clean_names(dat$scientific_collection_short_title), ".docx")
+                      janitor::make_clean_names(dat$short_title), ".docx")
   
   rmarkdown::render(here::here("code/template.Rmd"),
                     output_dir = dir_out,
                     output_file = file_name)
   
-  temp <- strsplit(x = dat$survey, split = ", ")[[1]]
+  
   
   for (ii in 1:length(temp)) {
     
@@ -158,7 +160,7 @@ for (i in 1:nrow(special)) {
 
 # move all loose files to the "all" folder
 a <- list.files(path = dir_out, pattern = ".docx", full.names = TRUE)
-dir.create(path = paste0(dir_out, "/all/"))
+dir.create(path = paste0(dir_out, "/all/")) # MCS: I think this needs to be moved up to before line 71 
 file.copy(from = a, to = paste0(dir_out, "/all/"))
 file.remove(a)
 
@@ -174,7 +176,7 @@ for (i in 1:nrow(comb)) {
                      special[,comb$vess[i]] == TRUE # & 
                    #   special$sap_gap == comb$sap_gap[i]
   ), ] %>% 
-    dplyr::select(scientific_collection_short_title, first_name, last_name, preserve, short_procedures, numeric_priority) 
+    dplyr::select(short_title, first_name, last_name, preserve, short_procedures, numeric_priority) 
   
   if (nrow(dat0) != 0) {
     
