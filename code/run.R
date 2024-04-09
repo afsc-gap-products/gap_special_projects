@@ -29,8 +29,8 @@ comb <- data.frame(srvy = c("srvy_AI", "srvy_AI",
                             "srvy_EBS", "srvy_EBS"), 
                    vessel = c("Ocean Explorer", "Alaska Provider", 
                               "Alaska Knight", "Northwest Explorer"), 
-                   vess = c("vess_oex", "vess_akp", 
-                            "vess_akk", "vess_nwe"), 
+                   vess = c("oex", "akp", 
+                            "akk", "nwx"), 
                    sap_gap = c("gap", "gap", "gap", "gap")) 
 
 # GOOGLE SPREADSHEET LINKS -----------------------------------------------------
@@ -62,13 +62,14 @@ source(here::here('code/data.R'))
 dat0 <- dat <- special
 srvy <- ""
 vess_not <- unique(comb$vess[!(comb$vess %in% vess)]) 
+ind_pages <- FALSE # MCS
 
 # project book
 filename0 <- paste0(maxyr, "-000-all.docx")
 rmarkdown::render(here::here("code/template_book.Rmd"),
                   output_dir = dir_out,
                   output_file = filename0)
-# dir.create(path = paste0(dir_out, "/all/")) 
+dir.create(path = paste0(dir_out, "/all/")) 
 file.copy(from = paste0(dir_out, filename0),   # copy summary files to survey folders. Requires an 'all' folder in the output directory, e.g., if the date is 2024-04-08, you need a folder output/2024-04-08/all/
           to = paste0(dir_out, "/all/", filename0), 
           overwrite = TRUE)
@@ -131,10 +132,13 @@ for (i in 1:length(srvy0)) {
 
 # Non-core individual project description pages --------------------------------
 
+ind_pages <- TRUE # Need this because in this loop, dat is a row, whereas above dat is multiple rows
+
 for (i in 1:nrow(special)) {
   jj <- i
   dat <- special[i,]
   temp <- strsplit(x = dat$survey, split = ", ")[[1]]
+
   
   file_name <- paste0(maxyr, "-", 
                       stringr::str_pad(i, nchar(nrow(special)), pad = "0"), "_", 
