@@ -2,7 +2,7 @@
 ```{r setup-{{jj}}, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 
-#dat <- dat0[{{jj}},]
+dat <- dat0[{{jj}},]
 
 # title: "`r paste0(dat$scientific_collection_full_title, '\n\n*(', dat$short_title, ')*')`"
 # author: 
